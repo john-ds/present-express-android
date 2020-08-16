@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_open"
+            android:icon="@drawable/ic_round_folder_24"
+            android:title="@string/nav_open"
+            app:showAsAction="ifRoom"/>
+
+        <item
+            android:id="@+id/nav_save"
+            android:icon="@drawable/ic_round_save_24"
+            android:title="@string/nav_save"
+            app:showAsAction="ifRoom"/>
+
+        <item
+            android:id="@+id/nav_show"
+            android:icon="@drawable/ic_round_play_arrow_24"
+            android:title="@string/play_slideshow"
+            app:showAsAction="ifRoom"/>
+
+        <item
+            android:id="@+id/nav_colour"
+            android:title="@string/background_colour"
+            app:showAsAction="never"/>
+
+        <item
+            android:id="@+id/nav_timings"
+            android:title="@string/all_timings"
+            app:showAsAction="never"/>
+
+        <item
+            android:id="@+id/nav_options"
+            android:title="@string/options"
+            app:showAsAction="never">
+            <menu>
+                <item
+                    android:id="@+id/nav_loop"
+                    android:title="@string/loop"
+                    android:checkable="true"
+                    android:checked="true"/>
+                <item
+                    android:id="@+id/nav_use_timings"
+                    android:title="@string/use_slide_timings"
+                    android:checkable="true"
+                    android:checked="true"/>
+            </menu>
+        </item>
+
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/about"
+            app:showAsAction="never"/>
+    </group>
+
+</menu>

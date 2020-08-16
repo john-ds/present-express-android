@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.expressapps.presentexpress.ColorActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.Launcher.AppBarOverlay"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/gradient_color"
+            app:popupTheme="@style/AppTheme.Launcher.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/black"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#000"
+                android:onClick="onItemClick"
+                android:text="@string/black"
+                android:textColor="#fff"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/white"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#fff"
+                android:onClick="onItemClick"
+                android:text="@string/white"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/light_grey"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#d3d3d3"
+                android:onClick="onItemClick"
+                android:text="@string/light_grey"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/dark_grey"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#a9a9a9"
+                android:onClick="onItemClick"
+                android:text="@string/dark_grey"
+                android:textColor="#fff"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/blue"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#5fccff"
+                android:onClick="onItemClick"
+                android:text="@string/blue"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/yellow"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#ffcd49"
+                android:onClick="onItemClick"
+                android:text="@string/yellow"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/purple"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#bb82ff"
+                android:onClick="onItemClick"
+                android:text="@string/purple"
+                android:textColor="#fff"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/green"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#7fd883"
+                android:onClick="onItemClick"
+                android:text="@string/green"
+                android:textColor="#000"
+                android:textSize="18sp" />
+        </GridLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
