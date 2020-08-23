@@ -27,7 +27,7 @@
     <string name="title_activity_about">About</string>
     <string name="present_express_logo">Present Express logo</string>
     <string name="present_express">Present Express</string>
-    <string name="version" translatable="false">v1.0.1 BETA</string>
+    <string name="version" translatable="false">v1.0.2 BETA</string>
     <string name="express_apps_and_j_logos">Express Apps and J logos</string>
     <string name="express">Present Express is part of Express Apps © John D</string>
     <string name="visit_our_website">Visit our website</string>
@@ -59,4 +59,6 @@
     <string name="end">Slideshow ended.</string>
     <string name="add_slides">Add slides</string>
     <string name="help_guide">Help guide</string>
+    <string name="clear_all_slides">Clear all slides</string>
+    <string name="sure_clear">Are you sure you want to clear all slides? This can\'t be undone.</string>
 </resources>

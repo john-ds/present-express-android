@@ -43,6 +43,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.expressapps.presentexpress.ColorActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.rustamg.filedialogs.FileDialog;
 import com.rustamg.filedialogs.OpenFileDialog;
 import com.rustamg.filedialogs.SaveFileDialog;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
     public static int backColor = Color.BLACK;
     public static boolean loop = true;
     public static boolean timings = true;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
         mToolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         ActivityCompat.requestPermissions((Activity) MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, READ_PERMISSIONS);
     }
@@ -119,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
                         openFileDialog.show(getSupportFragmentManager(), OpenFileDialog.class.getName());
 
                         newMessage(getString(R.string.select_present), Toast.LENGTH_SHORT);
+                        newEventLog("nav_open", "Open button clicked");
 
                     } else {
                         ActivityCompat.requestPermissions((Activity) MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSIONS);
@@ -146,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
                                         openFileDialog.show(getSupportFragmentManager(), OpenFileDialog.class.getName());
 
                                         newMessage(getString(R.string.select_present), Toast.LENGTH_SHORT);
+                                        newEventLog("nav_open", "Open button clicked");
 
                                     } else {
                                         ActivityCompat.requestPermissions((Activity) MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSIONS);
@@ -172,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
                         openFileDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme);
                         openFileDialog.setArguments(args);
                         openFileDialog.show(getSupportFragmentManager(), SaveFileDialog.class.getName());
+                        newEventLog("nav_save", "Save button clicked");
 
                     } else {
                         ActivityCompat.requestPermissions((Activity) MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, READ_PERMISSIONS);
@@ -256,6 +263,30 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
                 timings = item.isChecked();
                 break;
 
+            case R.id.nav_clear:
+                if (AllSlides.size() > 0) {
+                    DialogInterface.OnClickListener dialogClickListener2 = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    GridLayout img_grid = findViewById(R.id.image_grid);
+                                    img_grid.removeAllViews();
+                                    AllSlides.clear();
+                                    setItemNumbers();
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    break;
+                            }
+                        }
+                    };
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(MainActivity.this);
+                    builder2.setMessage(R.string.sure_clear).setTitle(R.string.clear_all_slides)
+                            .setPositiveButton(R.string.yes, dialogClickListener2).setNegativeButton(R.string.no, dialogClickListener2).show();
+                }
+                break;
+
             case R.id.nav_about:
                 Intent intent2 = new Intent(this, AboutActivity.class);
                 startActivity(intent2);
@@ -280,6 +311,17 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
 
         selectedImageView = null;
         startActivityForResult(chooserIntent, PICK_IMAGE);
+        newEventLog("addImage", "Add images button clicked");
+    }
+
+    public void show_click(View view) {
+        if (AllSlides.size() > 0) {
+            Intent intent = new Intent(this, SlideshowActivity.class);
+            startActivity(intent);
+
+        } else {
+            newMessage(getString(R.string.add_slide), Toast.LENGTH_SHORT);
+        }
     }
 
     public static final int PICK_IMAGE = 1;
@@ -721,14 +763,18 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
         }
 
         TextView txtView = findViewById(R.id.subtitle);
+        FloatingActionButton fab = findViewById(R.id.fab2);
+
         if (image_grid.getChildCount() > 0) {
             txtView.setVisibility(View.INVISIBLE);
             txtView = findViewById(R.id.subtitleinfo);
             txtView.setVisibility(View.INVISIBLE);
+            fab.show();
         } else {
             txtView.setVisibility(View.VISIBLE);
             txtView = findViewById(R.id.subtitleinfo);
             txtView.setVisibility(View.VISIBLE);
+            fab.hide();
         }
     }
 
@@ -746,6 +792,15 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
     private void newMessage(String s, int length) {
         Toast toast = Toast.makeText(getApplicationContext(), s, length);
         toast.show();
+    }
+
+    private void newEventLog(String id, String type) {
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, type);
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        } catch (Exception ignored) {}
     }
 
     private int currentSlide = 0;

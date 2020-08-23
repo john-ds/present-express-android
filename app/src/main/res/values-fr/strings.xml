@@ -58,4 +58,6 @@
     <string name="end">Diaporama terminé.</string>
     <string name="add_slides">Ajouter des diapositives</string>
     <string name="help_guide">Guide d\'aide</string>
+    <string name="clear_all_slides">Effacer tout</string>
+    <string name="sure_clear">Vous voulez vraiment effacer toutes les diapositives ? Cela ne peut pas être annulé.</string>
 </resources>
