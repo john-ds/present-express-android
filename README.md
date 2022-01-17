@@ -1,6 +1,9 @@
 # Present Express for Android
-A stunning slideshow maker for Android by John D. [Desktop version](https://github.com/john-ds/express-apps)
+Creating stunning slideshows with Present Express for Android by John D. [Desktop version](https://github.com/john-ds/express-apps)
 
+[Find out more](https://www.johnjds.co.uk/express)
+
+#
 
 ![Present Express](screenshot.png "Present Express")
 
