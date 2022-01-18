@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.expressapps.presentexpress.ColorActivity">
+    tools:context=".SettingsActivity">
 
 
     <com.expressapps.presentexpress.helper.BaseStatusBar
@@ -32,22 +32,23 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
+    <!--<com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.Launcher.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/base_status_bar">
 
-    <!-- <com.google.android.material.appbar.AppBarLayout
-         android:id="@+id/appbar"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:theme="@style/AppTheme.Launcher.AppBarOverlay"
-         app:layout_constraintTop_toTopOf="parent">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/gradient_color"
+            app:popupTheme="@style/AppTheme.Launcher.PopupOverlay" />
 
-         <androidx.appcompat.widget.Toolbar
-             android:id="@+id/toolbar"
-             android:layout_width="match_parent"
-             android:layout_height="?attr/actionBarSize"
-             android:background="@drawable/gradient_color"
-             app:popupTheme="@style/AppTheme.Launcher.PopupOverlay" />
-
-     </com.google.android.material.appbar.AppBarLayout>-->
+    </com.google.android.material.appbar.AppBarLayout>-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -66,10 +67,10 @@
             android:paddingVertical="20dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/black"
-                android:text="@string/black"
-                app:icon="@drawable/rounded_square"
-                android:onClick="onItemClick"
+                android:id="@+id/backcolor"
+                android:text="@string/background_colour"
+                app:icon="@drawable/colours"
+                android:onClick="onBackColorClick"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -88,15 +89,15 @@
                 app:iconGravity="start"
                 app:iconPadding="15dp"
                 app:iconSize="30dp"
-                app:iconTint="@color/slide_black"
+                app:iconTint="@android:color/transparent"
                 app:iconTintMode="add"
                 app:rippleColor="#BCBCBC"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/white"
-                android:text="@string/white"
-                app:icon="@drawable/rounded_square"
-                android:onClick="onItemClick"
+                android:id="@+id/set_all_timings"
+                android:text="@string/all_timings"
+                app:icon="@drawable/recent"
+                android:onClick="onSetTimingsClick"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -115,15 +116,15 @@
                 app:iconGravity="start"
                 app:iconPadding="15dp"
                 app:iconSize="30dp"
-                app:iconTint="@color/slide_white"
+                app:iconTint="@android:color/transparent"
                 app:iconTintMode="add"
                 app:rippleColor="#BCBCBC"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/light_grey"
-                android:text="@string/light_grey"
-                app:icon="@drawable/rounded_square"
-                android:onClick="onItemClick"
+                android:id="@+id/clear_all"
+                android:text="@string/clear_all_slides"
+                app:icon="@drawable/erase"
+                android:onClick="onClearSlidesClick"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -142,15 +143,110 @@
                 app:iconGravity="start"
                 app:iconPadding="15dp"
                 app:iconSize="30dp"
-                app:iconTint="@color/slide_lightgrey"
+                app:iconTint="@android:color/transparent"
+                app:iconTintMode="add"
+                app:rippleColor="#BCBCBC"/>
+
+            <View
+                android:layout_marginVertical="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_marginHorizontal="10dp"/>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/loop_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/loop"
+                android:onClick="onLoopClick"
+                android:layout_marginHorizontal="24dp"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-medium"
+                android:backgroundTint="#fff"
+                android:gravity="center_vertical"
+                android:letterSpacing="0"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="5dp"
+                android:stateListAnimator="@null"
+                android:textAllCaps="false"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                app:backgroundTint="#F6F6F6"
+                app:cornerRadius="10dp"
+                app:iconGravity="start"
+                app:iconPadding="15dp"
+                app:iconSize="30dp"
+                app:iconTint="@android:color/transparent"
+                app:iconTintMode="add"
+                app:rippleColor="#BCBCBC"/>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/timing_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/use_slide_timings"
+                android:onClick="onUseTimingsClick"
+                android:layout_marginHorizontal="24dp"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-medium"
+                android:backgroundTint="#fff"
+                android:gravity="center_vertical"
+                android:letterSpacing="0"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="5dp"
+                android:stateListAnimator="@null"
+                android:textAllCaps="false"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                app:backgroundTint="#F6F6F6"
+                app:cornerRadius="10dp"
+                app:iconGravity="start"
+                app:iconPadding="15dp"
+                app:iconSize="30dp"
+                app:iconTint="@android:color/transparent"
+                app:iconTintMode="add"
+                app:rippleColor="#BCBCBC"/>
+
+            <View
+                android:layout_marginVertical="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_marginHorizontal="10dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/about_us"
+                android:text="@string/about_present"
+                app:icon="@drawable/info"
+                android:onClick="onAboutClick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:backgroundTint="#fff"
+                android:gravity="center_vertical"
+                android:letterSpacing="0"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="5dp"
+                android:stateListAnimator="@null"
+                android:textAllCaps="false"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                app:backgroundTint="#F6F6F6"
+                app:cornerRadius="10dp"
+                app:iconGravity="start"
+                app:iconPadding="15dp"
+                app:iconSize="30dp"
+                app:iconTint="@android:color/transparent"
                 app:iconTintMode="add"
                 app:rippleColor="#BCBCBC"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/dark_grey"
-                android:text="@string/dark_grey"
-                app:icon="@drawable/rounded_square"
-                android:onClick="onItemClick"
+                android:id="@+id/help"
+                android:text="@string/help_guide"
+                app:icon="@drawable/help"
+                android:onClick="onHelpClick"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -169,115 +265,7 @@
                 app:iconGravity="start"
                 app:iconPadding="15dp"
                 app:iconSize="30dp"
-                app:iconTint="@color/slide_darkgrey"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/blue"
-                android:text="@string/blue"
-                app:icon="@drawable/rounded_square"
-                android:onClick="onItemClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@color/slide_blue"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/yellow"
-                android:text="@string/yellow"
-                app:icon="@drawable/rounded_square"
-                android:onClick="onItemClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@color/slide_yellow"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/purple"
-                android:text="@string/purple"
-                app:icon="@drawable/rounded_square"
-                android:onClick="onItemClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@color/slide_purple"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/green"
-                android:text="@string/green"
-                app:icon="@drawable/rounded_square"
-                android:onClick="onItemClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@color/slide_green"
+                app:iconTint="@android:color/transparent"
                 app:iconTintMode="add"
                 app:rippleColor="#BCBCBC"/>
 
@@ -289,5 +277,4 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:layout_height="5dp"
         android:layout_width="match_parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

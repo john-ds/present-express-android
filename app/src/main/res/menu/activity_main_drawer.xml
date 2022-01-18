@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.MainActivity">
 
     <group android:checkableBehavior="none">
         <item
             android:id="@+id/nav_open"
             android:icon="@drawable/ic_round_folder_24"
             android:title="@string/nav_open"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="always" />
 
         <item
             android:id="@+id/nav_save"
             android:icon="@drawable/ic_round_save_24"
             android:title="@string/nav_save"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="always"/>
 
+        <item
+            android:id="@+id/nav_options"
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:title="@string/slideshow_settings"
+            app:showAsAction="always"/>
+
+
+        <!--
         <item
             android:id="@+id/nav_show"
             android:title="@string/play_slideshow"
@@ -31,30 +41,23 @@
             app:showAsAction="never"/>
 
         <item
-            android:id="@+id/nav_options"
-            android:title="@string/options"
-            app:showAsAction="never">
-            <menu>
-                <item
-                    android:id="@+id/nav_loop"
-                    android:title="@string/loop"
-                    android:checkable="true"
-                    android:checked="true"/>
-                <item
-                    android:id="@+id/nav_use_timings"
-                    android:title="@string/use_slide_timings"
-                    android:checkable="true"
-                    android:checked="true"/>
-                <item
-                    android:id="@+id/nav_clear"
-                    android:title="@string/clear_all_slides"/>
-            </menu>
-        </item>
+            android:id="@+id/nav_loop"
+            android:title="@string/loop"
+            android:checkable="true"
+            android:checked="true"/>
+        <item
+            android:id="@+id/nav_use_timings"
+            android:title="@string/use_slide_timings"
+            android:checkable="true"
+            android:checked="true"/>
+        <item
+            android:id="@+id/nav_clear"
+            android:title="@string/clear_all_slides"/>
 
         <item
             android:id="@+id/nav_about"
             android:title="@string/about"
-            app:showAsAction="never"/>
+            app:showAsAction="never"/>-->
     </group>
 
 </menu>
