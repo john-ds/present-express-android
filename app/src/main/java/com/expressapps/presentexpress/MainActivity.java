@@ -32,8 +32,10 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-        ActivityCompat.requestPermissions((Activity) MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, READ_PERMISSIONS);
+        if (!isStorageGranted()) requestStoragePermission();
     }
 
     @Override
@@ -143,6 +145,50 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
         return result == PackageManager.PERMISSION_GRANTED;
     }
 
+    private boolean isStorageGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            return checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    private void requestStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                intent.setData(uri);
+                                startActivity(intent);
+                                break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage(getString(R.string.storage_permission_info)).setTitle(getString(R.string.permission_needed))
+                        .setPositiveButton("OK", dialogClickListener).setNegativeButton(R.string.cancel, dialogClickListener);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setLetterSpacing(0);
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setLetterSpacing(0);
+            }
+        }
+        else {
+            newMessage(getString(R.string.no_permission), Toast.LENGTH_SHORT);
+            ActivityCompat.requestPermissions((Activity) MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, READ_PERMISSIONS);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -150,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
                 GridLayout image_grid = findViewById(R.id.image_grid);
                 if (image_grid.getChildCount() == 0) {
 
-                    if (checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    if (isStorageGranted()) {
                         OpenFileDialog openFileDialog = new OpenFileDialog();
                         Bundle args = new Bundle();
                         args.putString(FileDialog.EXTENSION, ".present");
@@ -162,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
                         newEventLog("nav_open", "Open button clicked");
 
                     } else {
-                        ActivityCompat.requestPermissions((Activity) MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSIONS);
+                        requestStoragePermission();
                     }
 
                     /*Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -180,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
-                                    if (checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                    if (isStorageGranted()) {
                                         OpenFileDialog openFileDialog = new OpenFileDialog();
                                         Bundle args = new Bundle();
                                         args.putString(FileDialog.EXTENSION, ".present");
@@ -192,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
                                         newEventLog("nav_open", "Open button clicked");
 
                                     } else {
-                                        ActivityCompat.requestPermissions((Activity) MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSIONS);
+                                        requestStoragePermission();
                                     }
 
                                     /*Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -225,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
 
             case R.id.nav_save:
                 if (AllSlides.size() > 0) {
-                    if (checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    if (isStorageGranted()) {
                         SaveFileDialog openFileDialog = new SaveFileDialog();
                         Bundle args = new Bundle();
                         args.putString(FileDialog.EXTENSION, ".present");
@@ -240,8 +286,7 @@ public class MainActivity extends AppCompatActivity implements FileDialog.OnFile
                         newEventLog("nav_save", "Save button clicked");
 
                     } else {
-                        newMessage(getString(R.string.no_permission), Toast.LENGTH_SHORT);
-                        ActivityCompat.requestPermissions((Activity) MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                        requestStoragePermission();
                     }
 
                 } else {

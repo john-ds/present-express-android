@@ -87,4 +87,6 @@
     <string name="apply_changes">Apply changes</string>
     <string name="close_editor">Closing photo editor</string>
     <string name="editor_apply_changes">Do you want to apply any changes you\'ve made first?</string>
+    <string name="storage_permission_info">To open and save slideshows, the file management permission must be granted for Present Express. Click OK to go to Settings.</string>
+    <string name="permission_needed">Permission needed</string>
 </resources>
