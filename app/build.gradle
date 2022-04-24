@@ -9,8 +9,8 @@ android {
         applicationId 'com.expressapps.presentexpress'
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 6
-        versionName '2.1.0'
+        versionCode 7
+        versionName '2.1.1'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         versionNameSuffix ''
