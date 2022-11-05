@@ -88,4 +88,5 @@
     <string name="editor_apply_changes">Voulez-vous d\'abord appliquer les modifications que vous avez apportées ?</string>
     <string name="storage_permission_info">Pour ouvrir et enregistrer des diaporamas, l\'autorisation de gestion de fichiers doit être accordée pour Present Express. Cliquez sur OK pour accéder aux paramètres.</string>
     <string name="permission_needed">Autorisation nécessaire</string>
+    <string name="unknown_version">Version Inconnue</string>
 </resources>

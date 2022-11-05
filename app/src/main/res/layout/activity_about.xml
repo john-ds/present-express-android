@@ -87,10 +87,11 @@
                 android:textColor="@color/text_color"/>
 
             <TextView
+                android:id="@+id/version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="30dp"
-                android:text="@string/version"
+                android:text=""
                 android:textAlignment="center"
                 android:layout_gravity="center"/>
 

@@ -2,15 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId 'com.expressapps.presentexpress'
         minSdkVersion 23
-        targetSdkVersion 30
-        versionCode 7
-        versionName '2.1.1'
+        targetSdkVersion 32
+        versionCode 8
+        versionName '2.2.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         versionNameSuffix ''
