@@ -89,4 +89,26 @@
     <string name="storage_permission_info">Per aprire e salvare le presentazioni, è necessario concedere l\'autorizzazione alla gestione dei file per Present Express. Clicca su OK per andare alle Impostazioni.</string>
     <string name="permission_needed">Autorizzazione necessaria</string>
     <string name="unknown_version">Versione Sconosciuta</string>
+    <string name="set_transition">Imposta transizione</string>
+    <string name="closing_transition_editor">Chiusura dell\'editor</string>
+    <string name="secs">sec.</string>
+    <string name="advance_next_slide">Avanza alla diapositiva successiva dopo...</string>
+    <string name="select_transition">Seleziona una transizione</string>
+    <string name="trans_none">Nessuna</string>
+    <string name="trans_fade">Dissolvenza</string>
+    <string name="trans_push">Spinta</string>
+    <string name="trans_wipe">Tendina</string>
+    <string name="trans_uncover">Scopri</string>
+    <string name="trans_cover">Copri</string>
+    <string name="effect_options">Opzioni effetto</string>
+    <string name="apply_to_all_slides">Applica a tutte le diapositive</string>
+    <string name="trans_smoothly">Sfumatura</string>
+    <string name="trans_through_black">Passaggio nero</string>
+    <string name="trans_from_left">Da sinistra</string>
+    <string name="trans_from_right">Da destra</string>
+    <string name="trans_from_top">Dall\'alto</string>
+    <string name="trans_from_bottom">Dal basso</string>
+    <string name="transition_duration">Durata della transizione</string>
+    <string name="trans_duration_range">Inserisci un valore tra 0,1 e 10 secondi</string>
+    <string name="slide_duration_range">Inserisci un valore tra 0,5 e 25 secondi</string>
 </resources>

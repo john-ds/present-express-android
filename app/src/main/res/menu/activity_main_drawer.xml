@@ -22,42 +22,6 @@
             android:icon="@drawable/ic_baseline_settings_24"
             android:title="@string/slideshow_settings"
             app:showAsAction="always"/>
-
-
-        <!--
-        <item
-            android:id="@+id/nav_show"
-            android:title="@string/play_slideshow"
-            app:showAsAction="never"/>
-
-        <item
-            android:id="@+id/nav_colour"
-            android:title="@string/background_colour"
-            app:showAsAction="never"/>
-
-        <item
-            android:id="@+id/nav_timings"
-            android:title="@string/all_timings"
-            app:showAsAction="never"/>
-
-        <item
-            android:id="@+id/nav_loop"
-            android:title="@string/loop"
-            android:checkable="true"
-            android:checked="true"/>
-        <item
-            android:id="@+id/nav_use_timings"
-            android:title="@string/use_slide_timings"
-            android:checkable="true"
-            android:checked="true"/>
-        <item
-            android:id="@+id/nav_clear"
-            android:title="@string/clear_all_slides"/>
-
-        <item
-            android:id="@+id/nav_about"
-            android:title="@string/about"
-            app:showAsAction="never"/>-->
     </group>
 
 </menu>

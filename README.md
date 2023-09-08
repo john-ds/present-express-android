@@ -1,7 +1,7 @@
 # Present Express for Android
-Create stunning slideshows with Present Express for Android by John D. [Desktop version](https://github.com/john-ds/express-apps)
+Create stunning slideshows with Present Express for Android by John D.
 
-[Find out more](https://www.johnjds.co.uk/express)
+[Find out more](https://www.johnjds.co.uk/express) | [Desktop version](https://github.com/john-ds/express-apps)
 
 #
 
@@ -9,4 +9,4 @@ Create stunning slideshows with Present Express for Android by John D. [Desktop 
 
 
 ## Contact
-To get in touch, visit www.johnjds.co.uk/express or send me an email at expressapps@outlook.com
+To get in touch, visit [our contact page](https://express.johnjds.co.uk/help#contact)

@@ -89,4 +89,26 @@
     <string name="storage_permission_info">To open and save slideshows, the file management permission must be granted for Present Express. Click OK to go to Settings.</string>
     <string name="permission_needed">Permission needed</string>
     <string name="unknown_version">Unknown Version</string>
+    <string name="set_transition">Set transition</string>
+    <string name="closing_transition_editor">Closing transition editor</string>
+    <string name="secs">secs.</string>
+    <string name="advance_next_slide">Advance to next slide after...</string>
+    <string name="select_transition">Select a transition</string>
+    <string name="trans_none">None</string>
+    <string name="trans_fade">Fade</string>
+    <string name="trans_push">Push</string>
+    <string name="trans_wipe">Wipe</string>
+    <string name="trans_uncover">Uncover</string>
+    <string name="trans_cover">Cover</string>
+    <string name="effect_options">Effect options</string>
+    <string name="apply_to_all_slides">Apply to all slides</string>
+    <string name="trans_smoothly">Smoothly</string>
+    <string name="trans_through_black">Through black</string>
+    <string name="trans_from_left">From left</string>
+    <string name="trans_from_right">From right</string>
+    <string name="trans_from_top">From top</string>
+    <string name="trans_from_bottom">From bottom</string>
+    <string name="transition_duration">Transition duration</string>
+    <string name="trans_duration_range">Enter a value from 0.1 to 10 seconds</string>
+    <string name="slide_duration_range">Enter a value from 0.5 to 25 seconds</string>
 </resources>

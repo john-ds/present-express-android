@@ -33,99 +33,17 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
-
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:background="@color/white"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/image_grid"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="horizontal|vertical"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
-        <GridLayout
-            android:id="@+id/image_grid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="1"
-            android:paddingBottom="80dp">
-
-            <!--<LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="20dp"
-                android:paddingEnd="20dp"
-                android:layout_columnWeight="1">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:orientation="vertical"
-                android:minWidth="40dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="40dp"
-                    android:text="1"
-                    android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:layout_marginVertical="5dp"
-                    android:textColor="@color/text_color"
-                    android:fontFamily="sans-serif-medium"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    app:backgroundTint="#fff"
-                    android:gravity="center_vertical"
-                    android:letterSpacing="0"
-                    android:insetBottom="0dp"
-                    android:insetTop="0dp"
-                    android:paddingHorizontal="5dp"
-                    android:paddingVertical="5dp"
-                    android:stateListAnimator="@null"
-                    app:icon="@drawable/ic_baseline_more_horiz_24"
-                    app:iconPadding="0dp"
-                    app:iconSize="30dp"
-                    app:iconTint="@color/text_color"
-                    app:rippleColor="#BCBCBC"
-                    app:cornerRadius="0dp" />
-
-            </LinearLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/border"
-                    android:padding="1dp">
-
-                    <ImageView
-                        android:id="@+id/tempimg"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_margin="1dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_loading"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="H,16:9"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>-->
-
-        </GridLayout>
-
-    </ScrollView>
 
     <ScrollView
         android:id="@+id/welcomelayout"
@@ -156,7 +74,8 @@
                 android:layout_marginHorizontal="40dp"
                 android:adjustViewBounds="true"
                 android:maxHeight="250dp"
-                android:src="@drawable/export_loader" />
+                android:src="@drawable/export_loader"
+                android:importantForAccessibility="no" />
 
             <TextView
                 android:id="@+id/subtitle"
@@ -196,7 +115,7 @@
         app:tint="@color/white"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/scrollView2" />
+        app:layout_constraintEnd_toEndOf="@+id/drawer_layout" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab2"
@@ -212,7 +131,7 @@
         app:fabSize="normal"
         app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/scrollView2" />
+        app:layout_constraintEnd_toEndOf="@+id/drawer_layout" />
 
     <View
         android:background="@drawable/toolbar_shadow"

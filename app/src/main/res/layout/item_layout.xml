@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="20dp"
+    android:paddingEnd="20dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemLayout"
+    tools:ignore="RtlSymmetry">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:minWidth="40dp">
+
+        <TextView
+            android:id="@+id/itemLayoutId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="40dp"
+            android:text="#"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:layout_marginVertical="5dp"
+            android:textColor="@color/text_color"
+            android:fontFamily="sans-serif-medium"
+            tools:ignore="HardcodedText" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            app:backgroundTint="@color/white"
+            android:gravity="center_vertical"
+            android:letterSpacing="0"
+            android:insetBottom="0dp"
+            android:insetTop="0dp"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="5dp"
+            android:stateListAnimator="@null"
+            app:icon="@drawable/ic_baseline_more_horiz_24"
+            app:iconPadding="0dp"
+            app:iconSize="30dp"
+            app:iconTint="@color/text_color"
+            app:rippleColor="@color/ripple_color"
+            app:cornerRadius="0dp"
+            android:id="@+id/imgLayoutMoreBtn"/>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/border"
+        android:padding="1dp"
+        android:id="@+id/imgLayoutBorder">
+
+        <ImageView
+            android:id="@+id/itemLayoutImg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_loading_wide"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:importantForAccessibility="no" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

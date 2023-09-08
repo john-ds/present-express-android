@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.expressapps.presentexpress">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
         <activity
+            android:name=".TransitionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|density"
+            android:exported="false"
+            android:label="@string/set_transition"
+            android:theme="@style/AppTheme.Launcher.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
             android:name=".EditorActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|density"
             android:exported="false"
@@ -24,19 +27,14 @@
             android:theme="@style/AppTheme.Launcher.NoActionBar" />
         <activity
             android:name=".SettingsActivity"
-            android:exported="false"
             android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|density"
+            android:exported="false"
             android:label="@string/slideshow_settings"
             android:theme="@style/AppTheme.Launcher.NoActionBar" />
         <activity
             android:name=".AboutActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|density"
             android:label="@string/title_activity_about"
-            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|density"
-            android:theme="@style/AppTheme.Launcher.NoActionBar" />
-        <activity
-            android:name=".ColorActivity"
-            android:label="@string/title_activity_color"
-            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|density"
             android:theme="@style/AppTheme.Launcher.NoActionBar" />
         <activity
             android:name=".SlideshowActivity"
@@ -45,11 +43,10 @@
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|density">
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|density"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

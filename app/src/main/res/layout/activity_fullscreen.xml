@@ -4,14 +4,40 @@
     android:id="@+id/back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="#000"
+    android:keepScreenOn="true"
     tools:context=".SlideshowActivity">
 
-    <ImageView
-        android:id="@+id/fullscreen_content"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true" />
+        android:background="#fff"
+        android:alpha="0"
+        android:id="@+id/photo_grid_1">
+
+        <ImageView
+            android:id="@+id/photo_img_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:importantForAccessibility="no" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:alpha="0"
+        android:id="@+id/photo_grid_2">
+
+        <ImageView
+            android:id="@+id/photo_img_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:importantForAccessibility="no" />
+
+    </FrameLayout>
 
 </FrameLayout>

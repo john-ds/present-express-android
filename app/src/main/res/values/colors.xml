@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF8B19</color>
+    <color name="colorPrimary">#E57302</color>
     <color name="colorAccent">#F97D02</color>
     <color name="white">#ffffff</color>
     <color name="black_overlay">#66000000</color>
     <color name="slide_color">#000</color>
     <color name="text_color">#323232</color>
     <color name="ripple_color">#BCBCBC</color>
+    <color name="colorLight">#FFF1DE</color>
 
     <!-- slide colours -->
     <color name="slide_black">#000</color>

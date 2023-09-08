@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TransitionActivity">
+
+
+    <com.expressapps.presentexpress.helper.BaseStatusBar
+        android:id="@+id/base_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_color"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/toolbar"/>
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/gradient_color"
+        android:textSize="17sp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/base_status_bar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:fontFamily="sans-serif-medium"
+                android:paddingTop="10dp"
+                android:text="@string/advance_next_slide"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                android:labelFor="@+id/duration_txt"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/slide_duration_range"
+                android:textColor="@color/text_color"
+                android:paddingBottom="5dp"
+                android:textSize="14sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="20dp">
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/duration_txt"
+                    android:layout_marginHorizontal="0dp"
+                    android:paddingHorizontal="5dp"
+                    android:inputType="numberDecimal"
+                    android:importantForAutofill="no"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/secs"
+                    android:textColor="@color/text_color"
+                    android:layout_marginHorizontal="10dp"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_marginVertical="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_marginHorizontal="10dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:fontFamily="sans-serif-medium"
+                android:paddingTop="10dp"
+                android:paddingBottom="5dp"
+                android:text="@string/select_transition"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                android:labelFor="@id/transition_spinner"/>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:id="@+id/transition_spinner"
+                android:minHeight="40dp"
+                android:layout_marginBottom="15dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:fontFamily="sans-serif-medium"
+                android:paddingTop="10dp"
+                android:paddingBottom="5dp"
+                android:text="@string/effect_options"
+                android:textColor="@color/text_color"
+                android:id="@+id/effect_spinner_lbl"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:labelFor="@id/effect_spinner"/>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:id="@+id/effect_spinner"
+                android:minHeight="40dp"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/duration_panel">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingTop="10dp"
+                    android:text="@string/transition_duration"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp"
+                    android:labelFor="@+id/transition_duration_txt"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/trans_duration_range"
+                    android:textColor="@color/text_color"
+                    android:paddingBottom="5dp"
+                    android:textSize="14sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="20dp">
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/transition_duration_txt"
+                        android:layout_marginHorizontal="0dp"
+                        android:paddingHorizontal="5dp"
+                        android:inputType="numberDecimal"
+                        android:importantForAutofill="no"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/secs"
+                        android:textColor="@color/text_color"
+                        android:layout_marginHorizontal="10dp"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="25dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/apply_all"
+                android:text="@string/apply_to_all_slides"
+                app:icon="@drawable/colours"
+                android:onClick="onApplyAllClick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:backgroundTint="#fff"
+                android:gravity="center_vertical"
+                android:letterSpacing="0"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="5dp"
+                android:stateListAnimator="@null"
+                android:textAllCaps="false"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                app:backgroundTint="#F6F6F6"
+                app:cornerRadius="10dp"
+                app:iconGravity="start"
+                app:iconPadding="15dp"
+                app:iconSize="30dp"
+                app:iconTint="@android:color/transparent"
+                app:iconTintMode="add"
+                app:rippleColor="#BCBCBC"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:background="@drawable/toolbar_shadow"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_height="5dp"
+        android:layout_width="match_parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

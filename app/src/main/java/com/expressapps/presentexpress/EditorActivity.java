@@ -1,5 +1,6 @@
 package com.expressapps.presentexpress;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import android.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,34 +10,28 @@ import androidx.core.content.res.ResourcesCompat;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
+import com.expressapps.presentexpress.helper.FilterItem;
+import com.expressapps.presentexpress.helper.Funcs;
+import com.expressapps.presentexpress.helper.ImageFilter;
+import com.expressapps.presentexpress.helper.ImageSlide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.slider.Slider;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class EditorActivity extends AppCompatActivity {
-    private Toolbar mToolbar;
     private Bitmap originalImage;
-    private HashMap<String, Object> filtersApplied = new HashMap<>();
+    private FilterItem filtersApplied = new FilterItem();
     private int imageIdx = 0;
 
     @Override
@@ -44,77 +39,64 @@ public class EditorActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme_GradientStatusBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(R.string.photo_editor);
+        setSupportActionBar(findViewById(R.id.toolbar));
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.photo_editor);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Slider brightnessSlider = findViewById(R.id.brightness);
-        brightnessSlider.addOnChangeListener(new Slider.OnChangeListener() {
-            @Override
-            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                if (fromUser) {
-                    filtersApplied.put("brightness", transformRange(value, -100f, 100f, -0.5f, 0.5f));
-                    refreshImage();
-                }
+        brightnessSlider.addOnChangeListener((slider, value, fromUser) -> {
+            if (fromUser) {
+                filtersApplied.setBrightness(
+                    Funcs.transformRange(value, -100f, 100f, -0.5f, 0.5f));
+                refreshImage();
             }
         });
 
         Slider contrastSlider = findViewById(R.id.contrast);
-        contrastSlider.addOnChangeListener(new Slider.OnChangeListener() {
-            @Override
-            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                if (fromUser) {
-                    if (value < 0f) {
-                        filtersApplied.put("contrast", transformRange(value, -100f, 0f, 0.5f, 1f));
-                    } else {
-                        filtersApplied.put("contrast", transformRange(value, 0f, 100f, 1f, 2f));
-                    }
-                    refreshImage();
+        contrastSlider.addOnChangeListener((slider, value, fromUser) -> {
+            if (fromUser) {
+                if (value < 0f) {
+                    filtersApplied.setContrast(
+                        Funcs.transformRange(value, -100f, 0f, 0.5f, 1f));
+                } else {
+                    filtersApplied.setContrast(
+                        Funcs.transformRange(value, 0f, 100f, 1f, 2f));
                 }
+                refreshImage();
             }
         });
 
         Intent intent = getIntent();
         imageIdx = intent.getIntExtra("idx", 0);
-        if (MainActivity.AllSlides.get(imageIdx).containsKey("original")) {
-            originalImage = (Bitmap) MainActivity.AllSlides.get(imageIdx).get("original");
-        } else {
-            originalImage = (Bitmap) MainActivity.AllSlides.get(imageIdx).get("bmp");
-        }
+        originalImage =((ImageSlide) MainActivity.slideshow.slides.get(imageIdx)).original;
 
         ImageView previewImage = findViewById(R.id.previewimg);
         previewImage.setImageBitmap(originalImage);
 
-        if (intent.getStringExtra("filter") == null) {
-            filtersApplied.put("filter", "");
+        filtersApplied.setFilter(ImageFilter.parseString(intent.getStringExtra("filter")));
+        filtersApplied.setBrightness(intent.getFloatExtra("brightness", 0f));
+        filtersApplied.setContrast(intent.getFloatExtra("contrast", 1f));
+        filtersApplied.setRotation(intent.getIntExtra("rotation", 0));
+        filtersApplied.flipHorizontal = intent.getBooleanExtra("fliph", false);
+        filtersApplied.flipVertical = intent.getBooleanExtra("flipv", false);
+
+        brightnessSlider.setValue((float)Math.round(
+            Funcs.transformRange(filtersApplied.getBrightness(), -0.5f, 0.5f, -100f, 100f)));
+
+        if (filtersApplied.getContrast() < 1f) {
+            contrastSlider.setValue((float)Math.round(
+                Funcs.transformRange(filtersApplied.getContrast(), 0.5f, 1f, -100f, 0f)));
         } else {
-            filtersApplied.put("filter", intent.getStringExtra("filter"));
-        }
-
-        filtersApplied.put("brightness", intent.getFloatExtra("brightness", 0f));
-        filtersApplied.put("contrast", intent.getFloatExtra("contrast", 1f));
-        filtersApplied.put("rotation", intent.getIntExtra("rotation", 0));
-        filtersApplied.put("fliph", intent.getBooleanExtra("fliph", false));
-        filtersApplied.put("flipv", intent.getBooleanExtra("flipv", false));
-
-        brightnessSlider.setValue((float)Math.round(transformRange((float)filtersApplied.get("brightness"),
-                -0.5f, 0.5f, -100f, 100f)));
-
-        if ((float)filtersApplied.get("contrast") < 1f) {
-            contrastSlider.setValue((float)Math.round(transformRange((float)filtersApplied.get("contrast"),
-                    0.5f, 1f, -100f, 0f)));
-        } else {
-            contrastSlider.setValue((float)Math.round(transformRange((float)filtersApplied.get("contrast"),
-                    1f, 2f, 0f, 100f)));
+            contrastSlider.setValue((float)Math.round(
+                Funcs.transformRange(filtersApplied.getContrast(), 1f, 2f, 0f, 100f)));
         }
 
         MaterialCheckBox checkh = findViewById(R.id.fliphorizontal);
-        checkh.setChecked((boolean)filtersApplied.get("fliph"));
+        checkh.setChecked(filtersApplied.flipHorizontal);
         MaterialCheckBox checkv = findViewById(R.id.flipvertical);
-        checkv.setChecked((boolean)filtersApplied.get("flipv"));
+        checkv.setChecked(filtersApplied.flipVertical);
         refreshImage();
     }
 
@@ -132,30 +114,18 @@ public class EditorActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(EditorActivity.this);
-        builder.setTitle(R.string.close_editor);
-        builder.setMessage(R.string.editor_apply_changes);
+        Funcs.showDialog(EditorActivity.this, R.string.editor_apply_changes, R.string.close_editor, (d, b) -> {
+            switch (b) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    applyChanges();
+                    finish();
+                    break;
 
-        builder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                applyChanges();
-                finish();
+                case DialogInterface.BUTTON_NEGATIVE:
+                    finish();
+                    break;
             }
         });
-        builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setLetterSpacing(0);
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setLetterSpacing(0);
     }
 
     @Override
@@ -168,21 +138,15 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void applyChanges() {
-        MainActivity.AllSlides.get(imageIdx).put("filters", filtersApplied);
+        ((ImageSlide) MainActivity.slideshow.slides.get(imageIdx)).filters = filtersApplied;
     }
 
     private void refreshImage() {
         LinearLayout previewLayout = findViewById(R.id.previewlayout);
         ImageView previewImage = findViewById(R.id.previewimg);
 
-        if (previewLayout.getVisibility() == View.VISIBLE) {
+        if (previewLayout.getVisibility() == View.VISIBLE)
             previewImage.setImageBitmap(MainActivity.applyFilters(originalImage, filtersApplied));
-        }
-    }
-
-    public static float transformRange(float value, float r1min, float r1max, float r2min, float r2max) {
-        float scale = (r2max - r2min) / (r1max - r1min);
-        return (value - r1min) * scale + r2min;
     }
 
     public void onShowPreviewClick(View v) {
@@ -198,107 +162,77 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void resetFilterButtons() {
-        ((MaterialButton)findViewById(R.id.greyscalefilter)).setBackgroundColor(Color.WHITE);
-        ((MaterialButton)findViewById(R.id.sepiafilter)).setBackgroundColor(Color.WHITE);
-        ((MaterialButton)findViewById(R.id.blackwhitefilter)).setBackgroundColor(Color.WHITE);
-        ((MaterialButton)findViewById(R.id.redfilter)).setBackgroundColor(Color.WHITE);
-        ((MaterialButton)findViewById(R.id.greenfilter)).setBackgroundColor(Color.WHITE);
-        ((MaterialButton)findViewById(R.id.bluefilter)).setBackgroundColor(Color.WHITE);
+        findViewById(R.id.greyscalefilter).setBackgroundColor(Color.WHITE);
+        findViewById(R.id.sepiafilter).setBackgroundColor(Color.WHITE);
+        findViewById(R.id.blackwhitefilter).setBackgroundColor(Color.WHITE);
+        findViewById(R.id.redfilter).setBackgroundColor(Color.WHITE);
+        findViewById(R.id.greenfilter).setBackgroundColor(Color.WHITE);
+        findViewById(R.id.bluefilter).setBackgroundColor(Color.WHITE);
+    }
+
+    private void updateChosenFilter(ImageFilter filter, @IdRes int id) {
+        resetFilterButtons();
+        if (filtersApplied.getFilter() == filter) {
+            filtersApplied.setFilter(ImageFilter.NONE);
+        } else {
+            findViewById(id).setBackgroundColor(
+                ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
+            filtersApplied.setFilter(filter);
+        }
+        refreshImage();
     }
 
     public void onGreyscaleClick(View v) {
-        resetFilterButtons();
-        if (filtersApplied.get("filter") == "Greyscale") {
-            filtersApplied.put("filter", "");
-        } else {
-            ((MaterialButton) findViewById(R.id.greyscalefilter)).setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-            filtersApplied.put("filter", "Greyscale");
-        }
-        refreshImage();
+        updateChosenFilter(ImageFilter.GREYSCALE, R.id.greyscalefilter);
     }
 
     public void onSepiaClick(View v) {
-        resetFilterButtons();
-        if (filtersApplied.get("filter") == "Sepia") {
-            filtersApplied.put("filter", "");
-        } else {
-            ((MaterialButton) findViewById(R.id.sepiafilter)).setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-            filtersApplied.put("filter", "Sepia");
-        }
-        refreshImage();
+        updateChosenFilter(ImageFilter.SEPIA, R.id.sepiafilter);
     }
 
     public void onBlackWhiteClick(View v) {
-        resetFilterButtons();
-        if (filtersApplied.get("filter") == "BlackWhite") {
-            filtersApplied.put("filter", "");
-        } else {
-            ((MaterialButton) findViewById(R.id.blackwhitefilter)).setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-            filtersApplied.put("filter", "BlackWhite");
-        }
-        refreshImage();
+        updateChosenFilter(ImageFilter.BLACK_WHITE, R.id.blackwhitefilter);
     }
 
     public void onRedTintClick(View v) {
-        resetFilterButtons();
-        if (filtersApplied.get("filter") == "Red") {
-            filtersApplied.put("filter", "");
-        } else {
-            ((MaterialButton) findViewById(R.id.redfilter)).setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-            filtersApplied.put("filter", "Red");
-        }
-        refreshImage();
+        updateChosenFilter(ImageFilter.RED, R.id.redfilter);
     }
 
     public void onGreenTintClick(View v) {
-        resetFilterButtons();
-        if (filtersApplied.get("filter") == "Green") {
-            filtersApplied.put("filter", "");
-        } else {
-            ((MaterialButton) findViewById(R.id.greenfilter)).setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-            filtersApplied.put("filter", "Green");
-        }
-        refreshImage();
+        updateChosenFilter(ImageFilter.GREEN, R.id.greenfilter);
     }
 
     public void onBlueTintClick(View v) {
-        resetFilterButtons();
-        if (filtersApplied.get("filter") == "Blue") {
-            filtersApplied.put("filter", "");
-        } else {
-            ((MaterialButton) findViewById(R.id.bluefilter)).setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
-            filtersApplied.put("filter", "Blue");
-        }
-        refreshImage();
+        updateChosenFilter(ImageFilter.BLUE, R.id.bluefilter);
     }
 
     public void onRotateRightClick(View v) {
-        if ((int) filtersApplied.get("rotation") >= 270) {
-            filtersApplied.put("rotation", 0);
+        if (filtersApplied.getRotation() >= 270) {
+            filtersApplied.setRotation(0);
         } else {
-            filtersApplied.put("rotation", (Integer) filtersApplied.get("rotation") + 90);
+            filtersApplied.setRotation(filtersApplied.getRotation() + 90);
         }
         refreshImage();
     }
 
     public void onRotateLeftClick(View v) {
-        if ((int) filtersApplied.get("rotation") <= 0) {
-            filtersApplied.put("rotation", 270);
+        if (filtersApplied.getRotation() <= 0) {
+            filtersApplied.setRotation(270);
         } else {
-            filtersApplied.put("rotation", (Integer) filtersApplied.get("rotation") - 90);
+            filtersApplied.setRotation(filtersApplied.getRotation() - 90);
         }
         refreshImage();
     }
 
     public void onFlipHorizontalClick(View v) {
         MaterialCheckBox check = (MaterialCheckBox)v;
-        filtersApplied.put("fliph", check.isChecked());
+        filtersApplied.flipHorizontal = check.isChecked();
         refreshImage();
     }
 
     public void onFlipVerticalClick(View v) {
         MaterialCheckBox check = (MaterialCheckBox)v;
-        filtersApplied.put("flipv", check.isChecked());
+        filtersApplied.flipVertical = check.isChecked();
         refreshImage();
     }
 
@@ -318,11 +252,6 @@ public class EditorActivity extends AppCompatActivity {
         ImageView previewImage = findViewById(R.id.previewimg);
         previewImage.setImageBitmap(originalImage);
 
-        filtersApplied.put("filter", "");
-        filtersApplied.put("brightness", 0f);
-        filtersApplied.put("contrast", 1f);
-        filtersApplied.put("rotation", 0);
-        filtersApplied.put("fliph", false);
-        filtersApplied.put("flipv", false);
+        filtersApplied = new FilterItem();
     }
 }

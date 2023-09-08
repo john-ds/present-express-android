@@ -16,18 +16,13 @@ public class BaseStatusBar extends View {
 
     public BaseStatusBar(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
+        setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
     @Override
     public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mStatusBarHeight = dpToPx(24.0f);
-            return insets.consumeSystemWindowInsets();
-        }
-        return insets;
+        mStatusBarHeight = dpToPx(24.0f);
+        return insets.consumeSystemWindowInsets();
     }
 
     @Override

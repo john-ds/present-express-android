@@ -89,4 +89,26 @@
     <string name="storage_permission_info">Pour ouvrir et enregistrer des diaporamas, l\'autorisation de gestion de fichiers doit être accordée pour Present Express. Cliquez sur OK pour accéder aux paramètres.</string>
     <string name="permission_needed">Autorisation nécessaire</string>
     <string name="unknown_version">Version Inconnue</string>
+    <string name="set_transition">Régler la transition</string>
+    <string name="closing_transition_editor">Fermeture de l\'éditeur</string>
+    <string name="secs">sec.</string>
+    <string name="advance_next_slide">Passer à la diapositive suivante après...</string>
+    <string name="select_transition">Sélectionnez une transition</string>
+    <string name="trans_none">Aucune</string>
+    <string name="trans_fade">Fondu</string>
+    <string name="trans_push">Pousser</string>
+    <string name="trans_wipe">Balayer</string>
+    <string name="trans_uncover">Découvrir</string>
+    <string name="trans_cover">Couvrir</string>
+    <string name="effect_options">Options d\'effet</string>
+    <string name="apply_to_all_slides">Appliquer à toutes les diapositives</string>
+    <string name="trans_smoothly">Doucement</string>
+    <string name="trans_through_black">Par le noir</string>
+    <string name="trans_from_left">À partir de la gauche</string>
+    <string name="trans_from_right">À partir de la droite</string>
+    <string name="trans_from_top">À partir du haut</string>
+    <string name="trans_from_bottom">À partir du bas</string>
+    <string name="transition_duration">Durée de la transition</string>
+    <string name="trans_duration_range">Saisissez une valeur entre 0,1 et 10 secondes</string>
+    <string name="slide_duration_range">Saisissez une valeur entre 0,5 et 25 secondes</string>
 </resources>

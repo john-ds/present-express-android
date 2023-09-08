@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">
 
     <!-- The background color, preferably the same as your normal theme -->
-    <item android:drawable="@drawable/whitegradient"/>
+    <item android:drawable="@color/colorLight"/>
 
     <item android:drawable="@mipmap/ic_launcher_foreground"
         android:gravity="center" android:width="200dp" android:height="200dp"/>
