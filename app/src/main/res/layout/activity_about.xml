@@ -119,7 +119,6 @@
                 android:layout_marginHorizontal="10dp"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/website"
                 android:text="@string/visit_our_website"
                 app:icon="@drawable/globe"
                 android:onClick="onWebsiteClick"
@@ -146,7 +145,6 @@
                 app:rippleColor="#BCBCBC"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/help"
                 android:text="@string/help_guide"
                 app:icon="@drawable/help"
                 android:onClick="onHelpClick"

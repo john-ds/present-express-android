@@ -78,7 +78,6 @@
                 android:importantForAccessibility="no" />
 
             <TextView
-                android:id="@+id/subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -90,7 +89,6 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/subtitleinfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -103,7 +101,6 @@
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"

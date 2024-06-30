@@ -2,7 +2,6 @@ package com.expressapps.presentexpress.helper;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowInsets;

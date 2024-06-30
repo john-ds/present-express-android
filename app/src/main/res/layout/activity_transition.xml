@@ -211,7 +211,6 @@
                 android:layout_marginTop="25dp"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/apply_all"
                 android:text="@string/apply_to_all_slides"
                 app:icon="@drawable/colours"
                 android:onClick="onApplyAllClick"

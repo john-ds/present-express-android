@@ -90,7 +90,6 @@
             android:paddingVertical="10dp">
 
             <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/preview_check"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/show_picture_preview"
@@ -366,7 +365,6 @@
 
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/rotateright"
                 android:onClick="onRotateRightClick"
                 android:text="@string/rotate_clockwise"
                 app:icon="@drawable/rotate_right"
@@ -393,7 +391,6 @@
                 app:rippleColor="#BCBCBC"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/rotateleft"
                 android:onClick="onRotateLeftClick"
                 android:text="@string/rotate_anticlockwise"
                 app:icon="@drawable/rotate_left"
@@ -488,7 +485,6 @@
                 android:layout_marginHorizontal="10dp"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/resetall"
                 android:onClick="onResetClick"
                 android:text="@string/reset_all"
                 app:icon="@drawable/erase"

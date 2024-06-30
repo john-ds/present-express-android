@@ -1,7 +1,5 @@
 package com.expressapps.presentexpress.helper;
 
-import android.media.Image;
-
 import androidx.annotation.NonNull;
 
 import org.simpleframework.xml.Element;
@@ -10,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 public class FilterItem implements Cloneable {
     @Element(name = "filter", required = false)

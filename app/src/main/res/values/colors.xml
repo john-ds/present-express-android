@@ -10,12 +10,5 @@
     <color name="colorLight">#FFF1DE</color>
 
     <!-- slide colours -->
-    <color name="slide_black">#000</color>
-    <color name="slide_white">#fff</color>
     <color name="slide_lightgrey">#d3d3d3</color>
-    <color name="slide_darkgrey">#a9a9a9</color>
-    <color name="slide_blue">#5fccff</color>
-    <color name="slide_yellow">#ffcd49</color>
-    <color name="slide_purple">#bb82ff</color>
-    <color name="slide_green">#7fd883</color>
 </resources>

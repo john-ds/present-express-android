@@ -49,7 +49,7 @@ public class TransitionActivity extends AppCompatActivity {
         imageIdx = intent.getIntExtra("idx", 0);
         Transition transition = MainActivity.slideshow.slides.get(imageIdx).transition;
 
-        Spinner transitionSpinner = (Spinner)findViewById(R.id.transition_spinner);
+        Spinner transitionSpinner = findViewById(R.id.transition_spinner);
         transitionSpinner.setAdapter(new ArrayAdapter<>(TransitionActivity.this,
                 R.layout.support_simple_spinner_dropdown_item, new String[] {
                     getString(R.string.trans_none),
@@ -183,7 +183,7 @@ public class TransitionActivity extends AppCompatActivity {
             }
         }
 
-        Spinner effectSpinner = (Spinner)findViewById(R.id.effect_spinner);
+        Spinner effectSpinner = findViewById(R.id.effect_spinner);
         effectSpinner.setAdapter(new ArrayAdapter<>(TransitionActivity.this,
             R.layout.support_simple_spinner_dropdown_item, options));
         effectSpinner.setSelection(type.getDirection().getValue(), true);

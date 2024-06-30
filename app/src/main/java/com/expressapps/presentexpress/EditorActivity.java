@@ -1,10 +1,7 @@
 package com.expressapps.presentexpress;
 
 import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import android.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.content.DialogInterface;
@@ -22,11 +19,9 @@ import com.expressapps.presentexpress.helper.FilterItem;
 import com.expressapps.presentexpress.helper.Funcs;
 import com.expressapps.presentexpress.helper.ImageFilter;
 import com.expressapps.presentexpress.helper.ImageSlide;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.slider.Slider;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 public class EditorActivity extends AppCompatActivity {

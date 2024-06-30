@@ -113,11 +113,11 @@ public class SlideItemAdapter extends RecyclerView.Adapter<SlideItemAdapter.Cust
     }
 
     static class CustomViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView textViewIndex;
-        LinearLayout itemLayout;
-        MaterialButton moreBtn;
-        ConstraintLayout imageBorder;
+        final ImageView imageView;
+        final TextView textViewIndex;
+        final LinearLayout itemLayout;
+        final MaterialButton moreBtn;
+        final ConstraintLayout imageBorder;
 
         CustomViewHolder(@NonNull View itemView) {
             super(itemView);
