@@ -2,6 +2,7 @@ package com.expressapps.presentexpress;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -81,6 +82,7 @@ public class TransitionActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
         Funcs.showDialog(TransitionActivity.this, R.string.editor_apply_changes, R.string.closing_transition_editor, (d, b) -> {

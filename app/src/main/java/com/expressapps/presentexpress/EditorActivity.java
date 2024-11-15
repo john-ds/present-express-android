@@ -4,6 +4,7 @@ import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -107,6 +108,7 @@ public class EditorActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
         Funcs.showDialog(EditorActivity.this, R.string.editor_apply_changes, R.string.close_editor, (d, b) -> {
