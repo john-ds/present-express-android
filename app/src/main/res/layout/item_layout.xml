@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingTop="20dp"
@@ -50,7 +49,7 @@
             app:iconTint="@color/text_color"
             app:rippleColor="@color/ripple_color"
             app:cornerRadius="0dp"
-            android:id="@+id/imgLayoutMoreBtn"/>
+            android:id="@+id/imgLayoutMoreBtn" />
 
     </LinearLayout>
 

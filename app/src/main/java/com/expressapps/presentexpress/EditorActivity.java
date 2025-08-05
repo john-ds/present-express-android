@@ -1,9 +1,5 @@
 package com.expressapps.presentexpress;
 
-import androidx.annotation.IdRes;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.annotation.IdRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.expressapps.presentexpress.helper.FilterItem;
 import com.expressapps.presentexpress.helper.Funcs;
@@ -45,7 +45,7 @@ public class EditorActivity extends AppCompatActivity {
         brightnessSlider.addOnChangeListener((slider, value, fromUser) -> {
             if (fromUser) {
                 filtersApplied.setBrightness(
-                    Funcs.transformRange(value, -100f, 100f, -0.5f, 0.5f));
+                        Funcs.transformRange(value, -100f, 100f, -0.5f, 0.5f));
                 refreshImage();
             }
         });
@@ -55,10 +55,10 @@ public class EditorActivity extends AppCompatActivity {
             if (fromUser) {
                 if (value < 0f) {
                     filtersApplied.setContrast(
-                        Funcs.transformRange(value, -100f, 0f, 0.5f, 1f));
+                            Funcs.transformRange(value, -100f, 0f, 0.5f, 1f));
                 } else {
                     filtersApplied.setContrast(
-                        Funcs.transformRange(value, 0f, 100f, 1f, 2f));
+                            Funcs.transformRange(value, 0f, 100f, 1f, 2f));
                 }
                 refreshImage();
             }
@@ -66,7 +66,7 @@ public class EditorActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         imageIdx = intent.getIntExtra("idx", 0);
-        originalImage =((ImageSlide) MainActivity.slideshow.slides.get(imageIdx)).original;
+        originalImage = ((ImageSlide) MainActivity.slideshow.slides.get(imageIdx)).original;
 
         ImageView previewImage = findViewById(R.id.previewimg);
         previewImage.setImageBitmap(originalImage);
@@ -78,15 +78,15 @@ public class EditorActivity extends AppCompatActivity {
         filtersApplied.flipHorizontal = intent.getBooleanExtra("fliph", false);
         filtersApplied.flipVertical = intent.getBooleanExtra("flipv", false);
 
-        brightnessSlider.setValue((float)Math.round(
-            Funcs.transformRange(filtersApplied.getBrightness(), -0.5f, 0.5f, -100f, 100f)));
+        brightnessSlider.setValue((float) Math.round(
+                Funcs.transformRange(filtersApplied.getBrightness(), -0.5f, 0.5f, -100f, 100f)));
 
         if (filtersApplied.getContrast() < 1f) {
-            contrastSlider.setValue((float)Math.round(
-                Funcs.transformRange(filtersApplied.getContrast(), 0.5f, 1f, -100f, 0f)));
+            contrastSlider.setValue((float) Math.round(
+                    Funcs.transformRange(filtersApplied.getContrast(), 0.5f, 1f, -100f, 0f)));
         } else {
-            contrastSlider.setValue((float)Math.round(
-                Funcs.transformRange(filtersApplied.getContrast(), 1f, 2f, 0f, 100f)));
+            contrastSlider.setValue((float) Math.round(
+                    Funcs.transformRange(filtersApplied.getContrast(), 1f, 2f, 0f, 100f)));
         }
 
         MaterialCheckBox checkh = findViewById(R.id.fliphorizontal);
@@ -147,7 +147,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     public void onShowPreviewClick(View v) {
-        MaterialCheckBox previewCheck = (MaterialCheckBox)v;
+        MaterialCheckBox previewCheck = (MaterialCheckBox) v;
         LinearLayout previewLayout = findViewById(R.id.previewlayout);
 
         if (previewCheck.isChecked()) {
@@ -173,7 +173,7 @@ public class EditorActivity extends AppCompatActivity {
             filtersApplied.setFilter(ImageFilter.NONE);
         } else {
             findViewById(id).setBackgroundColor(
-                ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
+                    ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
             filtersApplied.setFilter(filter);
         }
         refreshImage();
@@ -222,13 +222,13 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     public void onFlipHorizontalClick(View v) {
-        MaterialCheckBox check = (MaterialCheckBox)v;
+        MaterialCheckBox check = (MaterialCheckBox) v;
         filtersApplied.flipHorizontal = check.isChecked();
         refreshImage();
     }
 
     public void onFlipVerticalClick(View v) {
-        MaterialCheckBox check = (MaterialCheckBox)v;
+        MaterialCheckBox check = (MaterialCheckBox) v;
         filtersApplied.flipVertical = check.isChecked();
         refreshImage();
     }

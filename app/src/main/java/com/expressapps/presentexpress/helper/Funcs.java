@@ -19,11 +19,11 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class Funcs {
     public static void showDialog(Context context, @StringRes int message, @StringRes int title,
-        DialogInterface.OnClickListener listener, String positiveBtnText, @Nullable String negativeBtnText) {
+                                  DialogInterface.OnClickListener listener, String positiveBtnText, @Nullable String negativeBtnText) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message).setTitle(title)
-            .setPositiveButton(positiveBtnText, listener);
+                .setPositiveButton(positiveBtnText, listener);
 
         if (negativeBtnText == null)
             builder.setCancelable(false);
@@ -36,10 +36,10 @@ public class Funcs {
     }
 
     public static void showDialog(Context context, @StringRes int message, @StringRes int title,
-        DialogInterface.OnClickListener listener, @StringRes int positiveBtnText, @StringRes int negativeBtnText) {
+                                  DialogInterface.OnClickListener listener, @StringRes int positiveBtnText, @StringRes int negativeBtnText) {
 
         showDialog(context, message, title, listener,
-            context.getString(positiveBtnText), context.getString(negativeBtnText));
+                context.getString(positiveBtnText), context.getString(negativeBtnText));
     }
 
     public static void showDialog(Context context, @StringRes int message, @StringRes int title,
@@ -49,7 +49,7 @@ public class Funcs {
     }
 
     public static void showInputDialog(Context context, EditText input, @StringRes int title,
-        DialogInterface.OnClickListener listener, String defaultText, int type, int margin) {
+                                       DialogInterface.OnClickListener listener, String defaultText, int type, int margin) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
@@ -57,7 +57,7 @@ public class Funcs {
         LinearLayout container = new LinearLayout(context);
         container.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(margin, 0, margin, 0);
 
         input.setLayoutParams(lp);
@@ -106,6 +106,7 @@ public class Funcs {
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
             bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, type);
             analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 }

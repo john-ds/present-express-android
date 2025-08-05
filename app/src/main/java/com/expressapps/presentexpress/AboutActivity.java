@@ -6,14 +6,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-
-import com.expressapps.presentexpress.helper.Funcs;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-import android.widget.TextView;
+import com.expressapps.presentexpress.helper.Funcs;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Objects;
 
@@ -35,8 +34,8 @@ public class AboutActivity extends AppCompatActivity {
 
         try {
             PackageInfo pInfo = getApplicationContext().getPackageManager()
-                .getPackageInfo(getApplicationContext().getPackageName(), 0);
-            ((TextView)findViewById(R.id.version)).setText("v" + pInfo.versionName);
+                    .getPackageInfo(getApplicationContext().getPackageName(), 0);
+            ((TextView) findViewById(R.id.version)).setText("v" + pInfo.versionName);
 
         } catch (PackageManager.NameNotFoundException e) {
             ((TextView) findViewById(R.id.version)).setText(R.string.unknown_version);

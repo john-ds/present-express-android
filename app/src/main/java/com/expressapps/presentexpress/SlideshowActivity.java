@@ -4,10 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -18,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.expressapps.presentexpress.helper.Funcs;
 import com.expressapps.presentexpress.helper.Slide;
@@ -50,11 +49,11 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
         public void run() {
             // Delayed removal of status and navigation bar
             mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
 
@@ -165,8 +164,8 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
         } else {
             findViewById(R.id.photo_grid_1).setAlpha(0);
             findViewById(R.id.photo_grid_2).setAlpha(0);
-            ((ImageView)findViewById(R.id.photo_img_1)).setImageBitmap(null);
-            ((ImageView)findViewById(R.id.photo_img_2)).setImageBitmap(null);
+            ((ImageView) findViewById(R.id.photo_img_1)).setImageBitmap(null);
+            ((ImageView) findViewById(R.id.photo_img_2)).setImageBitmap(null);
 
             transitionRunning = false;
             loadStart();
@@ -192,7 +191,7 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
             case FADE:
                 photoGrid.setAlpha(0f);
                 photoGrid.animate().alpha(1).setDuration(trans.getDurationMs())
-                    .withEndAction(this::transitionFinished);
+                        .withEndAction(this::transitionFinished);
                 break;
 
             case FADE_THROUGH_BLACK:
@@ -201,35 +200,35 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
 
                 photoGrid.setAlpha(0f);
                 photoGrid.animate().alpha(1).setStartDelay(trans.getDurationMs() / 2)
-                    .setDuration(trans.getDurationMs() / 2).withEndAction(this::transitionFinished);
+                        .setDuration(trans.getDurationMs() / 2).withEndAction(this::transitionFinished);
                 break;
 
             case PUSH_LEFT:
             case PUSH_RIGHT:
                 photoGridOther.setTranslationX(0);
                 photoGridOther.animate()
-                    .translationX(trans.getDirection() == TransitionDirection.LEFT ?
-                        photoGrid.getWidth() : -photoGrid.getWidth())
-                    .setDuration(trans.getDurationMs());
+                        .translationX(trans.getDirection() == TransitionDirection.LEFT ?
+                                photoGrid.getWidth() : -photoGrid.getWidth())
+                        .setDuration(trans.getDurationMs());
 
                 photoGrid.setTranslationX(trans.getDirection() == TransitionDirection.LEFT ?
-                    -photoGrid.getWidth() : photoGrid.getWidth());
+                        -photoGrid.getWidth() : photoGrid.getWidth());
                 photoGrid.animate().translationX(0).setDuration(trans.getDurationMs())
-                    .withEndAction(this::transitionFinished);
+                        .withEndAction(this::transitionFinished);
                 break;
 
             case PUSH_TOP:
             case PUSH_BOTTOM:
                 photoGridOther.setTranslationY(0);
                 photoGridOther.animate()
-                    .translationY(trans.getDirection() == TransitionDirection.TOP ?
-                        photoGrid.getHeight() : -photoGrid.getHeight())
-                    .setDuration(trans.getDurationMs());
+                        .translationY(trans.getDirection() == TransitionDirection.TOP ?
+                                photoGrid.getHeight() : -photoGrid.getHeight())
+                        .setDuration(trans.getDurationMs());
 
                 photoGrid.setTranslationY(trans.getDirection() == TransitionDirection.TOP ?
-                    -photoGrid.getHeight() : photoGrid.getHeight());
+                        -photoGrid.getHeight() : photoGrid.getHeight());
                 photoGrid.animate().translationY(0).setDuration(trans.getDurationMs())
-                    .withEndAction(this::transitionFinished);
+                        .withEndAction(this::transitionFinished);
                 break;
 
             case WIPE_LEFT:
@@ -252,9 +251,9 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
 
             case WIPE_RIGHT:
                 photoGrid.setLayoutParams(new FrameLayout.LayoutParams(
-                    0, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.RIGHT));
+                        0, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.RIGHT));
                 photoImg.setLayoutParams(new FrameLayout.LayoutParams(
-                    findViewById(R.id.back).getWidth(), ViewGroup.LayoutParams.MATCH_PARENT, Gravity.LEFT));
+                        findViewById(R.id.back).getWidth(), ViewGroup.LayoutParams.MATCH_PARENT, Gravity.LEFT));
 
                 valAnimator = ValueAnimator.ofInt(0, findViewById(R.id.back).getWidth());
                 valAnimator.setDuration(trans.getDurationMs());
@@ -292,9 +291,9 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
 
             case WIPE_BOTTOM:
                 photoGrid.setLayoutParams(new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, 0, Gravity.BOTTOM));
+                        ViewGroup.LayoutParams.MATCH_PARENT, 0, Gravity.BOTTOM));
                 photoImg.setLayoutParams(new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, findViewById(R.id.back).getHeight(), Gravity.TOP));
+                        ViewGroup.LayoutParams.MATCH_PARENT, findViewById(R.id.back).getHeight(), Gravity.TOP));
 
                 valAnimator = ValueAnimator.ofInt(0, findViewById(R.id.back).getHeight());
                 valAnimator.setDuration(trans.getDurationMs());
@@ -316,34 +315,34 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
             case UNCOVER_RIGHT:
                 photoGridOther.setTranslationX(0);
                 photoGridOther.animate()
-                    .translationX(trans.getDirection() == TransitionDirection.LEFT ?
-                        findViewById(R.id.back).getWidth() : -findViewById(R.id.back).getWidth())
-                    .setDuration(trans.getDurationMs()).withEndAction(this::transitionFinished);
+                        .translationX(trans.getDirection() == TransitionDirection.LEFT ?
+                                findViewById(R.id.back).getWidth() : -findViewById(R.id.back).getWidth())
+                        .setDuration(trans.getDurationMs()).withEndAction(this::transitionFinished);
                 break;
 
             case UNCOVER_TOP:
             case UNCOVER_BOTTOM:
                 photoGridOther.setTranslationY(0);
                 photoGridOther.animate()
-                    .translationY(trans.getDirection() == TransitionDirection.TOP ?
-                        findViewById(R.id.back).getHeight() : -findViewById(R.id.back).getHeight())
-                    .setDuration(trans.getDurationMs()).withEndAction(this::transitionFinished);
+                        .translationY(trans.getDirection() == TransitionDirection.TOP ?
+                                findViewById(R.id.back).getHeight() : -findViewById(R.id.back).getHeight())
+                        .setDuration(trans.getDurationMs()).withEndAction(this::transitionFinished);
                 break;
 
             case COVER_LEFT:
             case COVER_RIGHT:
                 photoGrid.setTranslationX(trans.getDirection() == TransitionDirection.LEFT ?
-                    -findViewById(R.id.back).getWidth() : findViewById(R.id.back).getWidth());
+                        -findViewById(R.id.back).getWidth() : findViewById(R.id.back).getWidth());
                 photoGrid.animate().translationX(0).setDuration(trans.getDurationMs())
-                    .withEndAction(this::transitionFinished);
+                        .withEndAction(this::transitionFinished);
                 break;
 
             case COVER_TOP:
             case COVER_BOTTOM:
                 photoGrid.setTranslationY(trans.getDirection() == TransitionDirection.TOP ?
-                    -findViewById(R.id.back).getHeight() : findViewById(R.id.back).getHeight());
+                        -findViewById(R.id.back).getHeight() : findViewById(R.id.back).getHeight());
                 photoGrid.animate().translationY(0).setDuration(trans.getDurationMs())
-                    .withEndAction(this::transitionFinished);
+                        .withEndAction(this::transitionFinished);
                 break;
 
             case NONE:
@@ -410,7 +409,8 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void onClick(View view) {}
+    public void onClick(View view) {
+    }
 
     @Override
     public void onBackPressed() {
@@ -431,7 +431,8 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
                 } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                     loadPrevious();
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
             return false;
         }
 
@@ -471,7 +472,7 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
     private void show() {
         // Show the system bar
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mVisible = true;
 
         // Schedule a runnable to display UI elements after a delay

@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar"/>
+        app:layout_constraintBottom_toTopOf="@+id/toolbar" />
 
 
     <androidx.appcompat.widget.Toolbar
@@ -84,7 +84,7 @@
                 android:textSize="22sp"
                 android:paddingTop="0dp"
                 android:layout_gravity="center"
-                android:textColor="@color/text_color"/>
+                android:textColor="@color/text_color" />
 
             <TextView
                 android:id="@+id/version"
@@ -93,7 +93,7 @@
                 android:paddingBottom="30dp"
                 android:text=""
                 android:textAlignment="center"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
 
             <ImageView
                 android:layout_width="100dp"
@@ -116,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="#c0c0c0"
-                android:layout_marginHorizontal="10dp"/>
+                android:layout_marginHorizontal="10dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:text="@string/visit_our_website"
@@ -142,7 +142,7 @@
                 app:iconSize="30dp"
                 app:iconTint="@android:color/transparent"
                 app:iconTintMode="add"
-                app:rippleColor="#BCBCBC"/>
+                app:rippleColor="#BCBCBC" />
 
             <com.google.android.material.button.MaterialButton
                 android:text="@string/help_guide"
@@ -168,7 +168,7 @@
                 app:iconSize="30dp"
                 app:iconTint="@android:color/transparent"
                 app:iconTintMode="add"
-                app:rippleColor="#BCBCBC"/>
+                app:rippleColor="#BCBCBC" />
         </LinearLayout>
     </ScrollView>
 
@@ -176,5 +176,5 @@
         android:background="@drawable/toolbar_shadow"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:layout_height="5dp"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

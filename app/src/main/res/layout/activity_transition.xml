@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar"/>
+        app:layout_constraintBottom_toTopOf="@+id/toolbar" />
 
 
     <androidx.appcompat.widget.Toolbar
@@ -57,7 +57,7 @@
                 android:text="@string/advance_next_slide"
                 android:textColor="@color/text_color"
                 android:textSize="16sp"
-                android:labelFor="@+id/duration_txt"/>
+                android:labelFor="@+id/duration_txt" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                 android:text="@string/slide_duration_range"
                 android:textColor="@color/text_color"
                 android:paddingBottom="5dp"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                     android:layout_marginHorizontal="0dp"
                     android:paddingHorizontal="5dp"
                     android:inputType="numberDecimal"
-                    android:importantForAutofill="no"/>
+                    android:importantForAutofill="no" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
                     android:text="@string/secs"
                     android:textColor="@color/text_color"
                     android:layout_marginHorizontal="10dp"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="#c0c0c0"
-                android:layout_marginHorizontal="10dp"/>
+                android:layout_marginHorizontal="10dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -113,7 +113,7 @@
                 android:text="@string/select_transition"
                 android:textColor="@color/text_color"
                 android:textSize="16sp"
-                android:labelFor="@id/transition_spinner"/>
+                android:labelFor="@id/transition_spinner" />
 
             <Spinner
                 android:layout_width="match_parent"
@@ -121,7 +121,7 @@
                 android:layout_marginHorizontal="25dp"
                 android:id="@+id/transition_spinner"
                 android:minHeight="40dp"
-                android:layout_marginBottom="15dp"/>
+                android:layout_marginBottom="15dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -135,7 +135,7 @@
                 android:id="@+id/effect_spinner_lbl"
                 android:textSize="16sp"
                 android:visibility="gone"
-                android:labelFor="@id/effect_spinner"/>
+                android:labelFor="@id/effect_spinner" />
 
             <Spinner
                 android:layout_width="match_parent"
@@ -144,7 +144,7 @@
                 android:id="@+id/effect_spinner"
                 android:minHeight="40dp"
                 android:visibility="gone"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -161,7 +161,7 @@
                     android:text="@string/transition_duration"
                     android:textColor="@color/text_color"
                     android:textSize="16sp"
-                    android:labelFor="@+id/transition_duration_txt"/>
+                    android:labelFor="@+id/transition_duration_txt" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -171,7 +171,7 @@
                     android:text="@string/trans_duration_range"
                     android:textColor="@color/text_color"
                     android:paddingBottom="5dp"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -187,7 +187,7 @@
                         android:layout_marginHorizontal="0dp"
                         android:paddingHorizontal="5dp"
                         android:inputType="numberDecimal"
-                        android:importantForAutofill="no"/>
+                        android:importantForAutofill="no" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -196,7 +196,7 @@
                         android:text="@string/secs"
                         android:textColor="@color/text_color"
                         android:layout_marginHorizontal="10dp"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -208,7 +208,7 @@
                 android:background="#c0c0c0"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginBottom="20dp"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:text="@string/apply_to_all_slides"
@@ -234,7 +234,7 @@
                 app:iconSize="30dp"
                 app:iconTint="@android:color/transparent"
                 app:iconTintMode="add"
-                app:rippleColor="#BCBCBC"/>
+                app:rippleColor="#BCBCBC" />
 
         </LinearLayout>
     </ScrollView>
@@ -243,5 +243,5 @@
         android:background="@drawable/toolbar_shadow"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:layout_height="5dp"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

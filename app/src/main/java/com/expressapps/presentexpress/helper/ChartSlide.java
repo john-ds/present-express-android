@@ -49,7 +49,7 @@ public class ChartSlide extends Slide implements Cloneable {
         clone.chartData = clone.chartData.clone();
 
         clone.legacyData = new ArrayList<>();
-        for(LabelValueItem p : legacyData)
+        for (LabelValueItem p : legacyData)
             clone.legacyData.add(p.clone());
 
         return clone;
@@ -113,7 +113,7 @@ class ChartItem implements Cloneable {
             clone.labels = new ArrayList<>(clone.labels);
 
             clone.series = new ArrayList<>();
-            for(SeriesItem p : series)
+            for (SeriesItem p : series)
                 clone.series.add(p.clone());
 
             return clone;

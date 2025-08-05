@@ -16,11 +16,11 @@ public class SlideshowItem {
 
     @Path("slides")
     @ElementListUnion({
-        @ElementList(entry = "image", inline = true, type = ImageSlide.class),
-        @ElementList(entry = "text", inline = true, type = TextSlide.class),
-        @ElementList(entry = "screenshot", inline = true, type = ScreenshotSlide.class),
-        @ElementList(entry = "chart", inline = true, type = ChartSlide.class),
-        @ElementList(entry = "drawing", inline = true, type = DrawingSlide.class)
+            @ElementList(entry = "image", inline = true, type = ImageSlide.class),
+            @ElementList(entry = "text", inline = true, type = TextSlide.class),
+            @ElementList(entry = "screenshot", inline = true, type = ScreenshotSlide.class),
+            @ElementList(entry = "chart", inline = true, type = ChartSlide.class),
+            @ElementList(entry = "drawing", inline = true, type = DrawingSlide.class)
     })
     public List<Slide> slides = new ArrayList<>();
 }

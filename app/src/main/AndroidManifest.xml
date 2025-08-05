@@ -18,7 +18,7 @@
             android:exported="false"
             android:label="@string/set_transition"
             android:theme="@style/AppTheme.Launcher.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".EditorActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|density"

@@ -5,16 +5,6 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.documentfile.provider.DocumentFile;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,6 +24,15 @@ import android.webkit.MimeTypeMap;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -73,111 +72,112 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAnalytics mFA;
 
     private final ActivityResultLauncher<Intent> pickPresentLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                try {
-                    if (verifyPresentFile(result.getData().getData())) {
-                        loadFile(result.getData().getData());
-                    } else {
-                        throw new Exception("Unsupported");
-                    }
-                } catch (Exception e) {
-                    Funcs.newLongMessage(MainActivity.this, R.string.document_error);
-                }
-            }
-        });
-
-    private final ActivityResultLauncher<Intent> savePresentLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null)
-                saveFile(result.getData().getData());
-        });
-
-    private final ActivityResultLauncher<Intent> optionsLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(), result -> {
-            refreshBackgroundRes();
-
-            if (result.getResultCode() == Activity.RESULT_OK && !slideshow.slides.isEmpty()) {
-                clearSlides();
-                checkIsEmpty();
-            }
-        });
-
-    private final ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                if (editingImageIdx == -1) {
-                    ArrayList<Uri> list = new ArrayList<>();
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     try {
-                        boolean unsupported = false;
-                        Uri resData = result.getData().getData();
-                        ClipData clipData = result.getData().getClipData();
-
-                        if (resData != null) {
-                            if (verifyImageFile(resData))
-                                list.add(resData);
-                            else unsupported = true;
-
-                        } else if (clipData != null) {
-                            for (int i = 0; i < clipData.getItemCount(); i++) {
-                                if (verifyImageFile(clipData.getItemAt(i).getUri()))
-                                    list.add(clipData.getItemAt(i).getUri());
-                                else unsupported = true;
-                            }
-                        }
-
-                        for (int i = 0; i < list.size(); i++)
-                            createSlide(list.get(i));
-
-                        checkIsEmpty();
-                        if (unsupported) throw new Exception("Unsupported");
-
-                    } catch (Exception e) {
-                        Funcs.newLongMessage(MainActivity.this, R.string.unsupported_images);
-                    }
-                } else {
-                    try {
-                        final Uri uri = result.getData().getData();
-                        if (verifyImageFile(uri)) {
-                            adapter.updateItem(null, editingImageIdx);
-
-                            Glide.with(this)
-                                .asBitmap()
-                                .load(result.getData().getData())
-                                .into(new CustomTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        ImageSlide s = (ImageSlide) slideshow.slides.get(editingImageIdx);
-
-                                        s.name = generateNewName(MimeTypeMap.getSingleton()
-                                            .getExtensionFromMimeType(getContentResolver().getType(uri)));
-                                        s.original = resource;
-                                        s.bitmap = applyFilters(resource, s.filters);
-
-                                        adapter.updateItem(s.bitmap, editingImageIdx);
-                                    }
-
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {}
-                                });
+                        if (verifyPresentFile(result.getData().getData())) {
+                            loadFile(result.getData().getData());
                         } else {
                             throw new Exception("Unsupported");
                         }
                     } catch (Exception e) {
-                        Funcs.newLongMessage(MainActivity.this, R.string.unsupported_image);
+                        Funcs.newLongMessage(MainActivity.this, R.string.document_error);
                     }
                 }
-            }
-        });
+            });
+
+    private final ActivityResultLauncher<Intent> savePresentLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null)
+                    saveFile(result.getData().getData());
+            });
+
+    private final ActivityResultLauncher<Intent> optionsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                refreshBackgroundRes();
+
+                if (result.getResultCode() == Activity.RESULT_OK && !slideshow.slides.isEmpty()) {
+                    clearSlides();
+                    checkIsEmpty();
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    if (editingImageIdx == -1) {
+                        ArrayList<Uri> list = new ArrayList<>();
+                        try {
+                            boolean unsupported = false;
+                            Uri resData = result.getData().getData();
+                            ClipData clipData = result.getData().getClipData();
+
+                            if (resData != null) {
+                                if (verifyImageFile(resData))
+                                    list.add(resData);
+                                else unsupported = true;
+
+                            } else if (clipData != null) {
+                                for (int i = 0; i < clipData.getItemCount(); i++) {
+                                    if (verifyImageFile(clipData.getItemAt(i).getUri()))
+                                        list.add(clipData.getItemAt(i).getUri());
+                                    else unsupported = true;
+                                }
+                            }
+
+                            for (int i = 0; i < list.size(); i++)
+                                createSlide(list.get(i));
+
+                            checkIsEmpty();
+                            if (unsupported) throw new Exception("Unsupported");
+
+                        } catch (Exception e) {
+                            Funcs.newLongMessage(MainActivity.this, R.string.unsupported_images);
+                        }
+                    } else {
+                        try {
+                            final Uri uri = result.getData().getData();
+                            if (verifyImageFile(uri)) {
+                                adapter.updateItem(null, editingImageIdx);
+
+                                Glide.with(this)
+                                        .asBitmap()
+                                        .load(result.getData().getData())
+                                        .into(new CustomTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                ImageSlide s = (ImageSlide) slideshow.slides.get(editingImageIdx);
+
+                                                s.name = generateNewName(MimeTypeMap.getSingleton()
+                                                        .getExtensionFromMimeType(getContentResolver().getType(uri)));
+                                                s.original = resource;
+                                                s.bitmap = applyFilters(resource, s.filters);
+
+                                                adapter.updateItem(s.bitmap, editingImageIdx);
+                                            }
+
+                                            @Override
+                                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                            }
+                                        });
+                            } else {
+                                throw new Exception("Unsupported");
+                            }
+                        } catch (Exception e) {
+                            Funcs.newLongMessage(MainActivity.this, R.string.unsupported_image);
+                        }
+                    }
+                }
+            });
 
     private final ActivityResultLauncher<Intent> editImageLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (slideshow.slides.get(editingImageIdx).getSlideType() == SlideType.IMAGE) {
-                ImageSlide s = (ImageSlide) slideshow.slides.get(editingImageIdx);
-                s.bitmap = applyFilters(s.original, s.filters);
-                adapter.updateItem(s.bitmap, editingImageIdx);
-            }
-        });
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (slideshow.slides.get(editingImageIdx).getSlideType() == SlideType.IMAGE) {
+                    ImageSlide s = (ImageSlide) slideshow.slides.get(editingImageIdx);
+                    s.bitmap = applyFilters(s.original, s.filters);
+                    adapter.updateItem(s.bitmap, editingImageIdx);
+                }
+            });
 
     private final View.OnClickListener img_click = v -> setupOptions(v, (int) v.getTag());
 
@@ -264,10 +264,10 @@ public class MainActivity extends AppCompatActivity {
             boolean imageContentFailed = false;
 
             ZipInputStream zipInputStream = new ZipInputStream(
-                new BufferedInputStream(getContentResolver().openInputStream(file)));
+                    new BufferedInputStream(getContentResolver().openInputStream(file)));
             ZipEntry zipEntry = zipInputStream.getNextEntry();
 
-            while(zipEntry != null) {
+            while (zipEntry != null) {
                 if (zipEntry.getName().equals("info.xml")) {
                     Scanner sc = new Scanner(zipInputStream);
                     while (sc.hasNextLine())
@@ -283,12 +283,12 @@ public class MainActivity extends AppCompatActivity {
             slideshow = serializer.read(SlideshowItem.class, info.toString().replace("\uFEFF", ""));
 
             zipInputStream = new ZipInputStream(
-                new BufferedInputStream(getContentResolver().openInputStream(file)));
+                    new BufferedInputStream(getContentResolver().openInputStream(file)));
             zipEntry = zipInputStream.getNextEntry();
 
             setBackgroundColour();
 
-            while(zipEntry != null){
+            while (zipEntry != null) {
                 int idx = checkNameExists(zipEntry.getName());
                 if (idx != -1) {
                     try {
@@ -350,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!containsOtherContent)
                     if (i.getSlideType() == SlideType.CHART || i.getSlideType() == SlideType.TEXT ||
-                         i.getSlideType() == SlideType.DRAWING) containsOtherContent = true;
+                            i.getSlideType() == SlideType.DRAWING) containsOtherContent = true;
             }
             findViewById(R.id.welcomelayout).setVisibility(View.GONE);
             checkIsEmpty();
@@ -360,7 +360,8 @@ public class MainActivity extends AppCompatActivity {
 
             } else if (otherContentFailed) {
                 Funcs.showDialog(MainActivity.this, R.string.compat_mode_desc, R.string.compat_mode,
-                    (d, b) -> {}, "OK", null);
+                        (d, b) -> {
+                        }, "OK", null);
 
             } else if (containsOtherContent) {
                 Funcs.newLongMessage(MainActivity.this, R.string.only_images);
@@ -389,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveFile(Uri file) {
         try {
             ZipOutputStream zipOutputStream = new ZipOutputStream(
-                new BufferedOutputStream(getContentResolver().openOutputStream(file)));
+                    new BufferedOutputStream(getContentResolver().openOutputStream(file)));
 
             for (Slide i : slideshow.slides) {
                 Bitmap.CompressFormat format = getFormat(i.getFileName());
@@ -397,7 +398,7 @@ public class MainActivity extends AppCompatActivity {
                 zipOutputStream.putNextEntry(imgEntry);
 
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                Bitmap bmp = i.getSlideType() == SlideType.IMAGE ? ((ImageSlide)i).original : i.bitmap;
+                Bitmap bmp = i.getSlideType() == SlideType.IMAGE ? ((ImageSlide) i).original : i.bitmap;
                 bmp.compress(format, 90, bos);
 
                 byte[] img = bos.toByteArray();
@@ -408,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
                     ZipEntry isfEntry = new ZipEntry(i.name);
                     zipOutputStream.putNextEntry(isfEntry);
 
-                    byte[] isf = ((DrawingSlide)i).strokes;
+                    byte[] isf = ((DrawingSlide) i).strokes;
                     zipOutputStream.write(isf, 0, isf.length);
                     zipOutputStream.closeEntry();
                 }
@@ -469,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
 
         itemPopup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-                case 0 : // Edit picture
+                case 0: // Edit picture
                     Intent intent = new Intent(MainActivity.this, EditorActivity.class);
                     intent.putExtra("idx", idx);
 
@@ -486,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
                     Funcs.newEventLog(mFA, "nav_edit", "Photo editor opened");
                     break;
 
-                case 1 : // Change picture
+                case 1: // Change picture
                     Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                     getIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                     getIntent.setType("image/*");
@@ -496,7 +497,7 @@ public class MainActivity extends AppCompatActivity {
                     pickImageLauncher.launch(chooserIntent);
                     break;
 
-                case 2 : // Set transition
+                case 2: // Set transition
                     Intent transIntent = new Intent(MainActivity.this, TransitionActivity.class);
                     transIntent.putExtra("idx", idx);
 
@@ -505,21 +506,21 @@ public class MainActivity extends AppCompatActivity {
                     Funcs.newEventLog(mFA, "nav_trans", "Transition editor opened");
                     break;
 
-                case 3 : // Move up
+                case 3: // Move up
                     if (idx != 0) {
-                        Collections.swap(slideshow.slides, idx, idx-1);
-                        adapter.moveItems(idx, idx-1);
+                        Collections.swap(slideshow.slides, idx, idx - 1);
+                        adapter.moveItems(idx, idx - 1);
                     }
                     break;
 
-                case 4 : // Move down
-                    if (idx+1 < slideshow.slides.size()) {
-                        Collections.swap(slideshow.slides, idx, idx+1);
-                        adapter.moveItems(idx, idx+1);
+                case 4: // Move down
+                    if (idx + 1 < slideshow.slides.size()) {
+                        Collections.swap(slideshow.slides, idx, idx + 1);
+                        adapter.moveItems(idx, idx + 1);
                     }
                     break;
 
-                case 5 : // Remove
+                case 5: // Remove
                     adapter.removeItem(idx);
                     slideshow.slides.remove(idx);
                     checkIsEmpty();
@@ -543,28 +544,30 @@ public class MainActivity extends AppCompatActivity {
     private void createSlide(Uri uri) {
         ImageSlide s = new ImageSlide();
         s.name = generateNewName(MimeTypeMap.getSingleton()
-            .getExtensionFromMimeType(getContentResolver().getType(uri)));
+                .getExtensionFromMimeType(getContentResolver().getType(uri)));
 
         adapter.addItem(null);
         int idx = adapter.getItemCount() - 1;
 
         Glide.with(this)
-            .asBitmap()
-            .load(uri)
-            .into(new CustomTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                    setBackgroundColour();
+                .asBitmap()
+                .load(uri)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        setBackgroundColour();
 
-                    s.original = resource;
-                    s.bitmap = applyFilters(resource, s.filters);
-                    adapter.updateItem(s.bitmap, idx);
-                    slideshow.slides.add(s);
-                    checkIsEmpty();
-                }
-                @Override
-                public void onLoadCleared(@Nullable Drawable placeholder) {}
-            });
+                        s.original = resource;
+                        s.bitmap = applyFilters(resource, s.filters);
+                        adapter.updateItem(s.bitmap, idx);
+                        slideshow.slides.add(s);
+                        checkIsEmpty();
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
     }
 
     public static Bitmap applyFilters(Bitmap originalImage, FilterItem filtersApplied) {
@@ -585,11 +588,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case BLACK_WHITE:
                 clr.setSaturation(0);
-                ColorMatrix matrixC = new ColorMatrix(new float[] {
-                    85.f, 85.f, 85.f, 0.f, -255.f * 90f,
-                    85.f, 85.f, 85.f, 0.f, -255.f * 90f,
-                    85.f, 85.f, 85.f, 0.f, -255.f * 90f,
-                    0f, 0f, 0f, 1f, 0f
+                ColorMatrix matrixC = new ColorMatrix(new float[]{
+                        85.f, 85.f, 85.f, 0.f, -255.f * 90f,
+                        85.f, 85.f, 85.f, 0.f, -255.f * 90f,
+                        85.f, 85.f, 85.f, 0.f, -255.f * 90f,
+                        0f, 0f, 0f, 1f, 0f
                 });
                 clr.setConcat(matrixC, clr);
                 break;
@@ -599,20 +602,20 @@ public class MainActivity extends AppCompatActivity {
 
         float contrast = filtersApplied.getContrast();
         float brightness = Funcs.transformRange(
-            filtersApplied.getBrightness(), -0.5f, 0.5f, -127.5f, 127.5f);
+                filtersApplied.getBrightness(), -0.5f, 0.5f, -127.5f, 127.5f);
 
-        ColorMatrix matrixD = new ColorMatrix(new float[] {
-            contrast, 0, 0, 0, brightness,
-            0, contrast, 0, 0, brightness,
-            0, 0, contrast, 0, brightness,
-            0, 0, 0, 1, 0
+        ColorMatrix matrixD = new ColorMatrix(new float[]{
+                contrast, 0, 0, 0, brightness,
+                0, contrast, 0, 0, brightness,
+                0, 0, contrast, 0, brightness,
+                0, 0, 0, 1, 0
         });
         clr.setConcat(matrixD, clr);
 
         Matrix matrixRotate = new Matrix();
         matrixRotate.postRotate(filtersApplied.getRotation());
         matrixRotate.postScale(filtersApplied.flipHorizontal ? -1 : 1, filtersApplied.flipVertical ? -1 : 1,
-            originalImage.getWidth() / 2f, originalImage.getHeight() / 2f);
+                originalImage.getWidth() / 2f, originalImage.getHeight() / 2f);
 
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
@@ -678,9 +681,9 @@ public class MainActivity extends AppCompatActivity {
             String mimeType = getContentResolver().getType(uri);
 
             if ((Objects.requireNonNull(
-                DocumentFile.fromSingleUri(getApplicationContext(), uri)).length() / 1024 / 1024) > 10)
+                    DocumentFile.fromSingleUri(getApplicationContext(), uri)).length() / 1024 / 1024) > 10)
                 return false;
-            
+
             for (String i : formats) {
                 if (MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType).equals(i))
                     return true;
@@ -698,7 +701,7 @@ public class MainActivity extends AppCompatActivity {
             String mimeType = getContentResolver().getType(uri);
 
             if ((Objects.requireNonNull(
-                DocumentFile.fromSingleUri(getApplicationContext(), uri)).length() / 1024 / 1024) > 50)
+                    DocumentFile.fromSingleUri(getApplicationContext(), uri)).length() / 1024 / 1024) > 50)
                 return false;
 
             if (MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType) == null && mimeType.equals("application/octet-stream"))
@@ -755,7 +758,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setBackgroundColour() {
         ((GradientDrawable) Objects.requireNonNull(ContextCompat.getDrawable(getBaseContext(), R.drawable.border)))
-            .setColor(slideshow.info.getBackColour());
+                .setColor(slideshow.info.getBackColour());
     }
 
     // endregion

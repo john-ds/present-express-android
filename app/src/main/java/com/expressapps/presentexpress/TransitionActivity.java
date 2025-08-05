@@ -1,7 +1,5 @@
 package com.expressapps.presentexpress;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.expressapps.presentexpress.helper.Funcs;
 import com.expressapps.presentexpress.helper.Transition;
@@ -32,7 +32,8 @@ public class TransitionActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onNothingSelected(AdapterView<?> parent) {}
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
     };
 
     @Override
@@ -52,22 +53,22 @@ public class TransitionActivity extends AppCompatActivity {
 
         Spinner transitionSpinner = findViewById(R.id.transition_spinner);
         transitionSpinner.setAdapter(new ArrayAdapter<>(TransitionActivity.this,
-                R.layout.support_simple_spinner_dropdown_item, new String[] {
-                    getString(R.string.trans_none),
-                    getString(R.string.trans_fade),
-                    getString(R.string.trans_push),
-                    getString(R.string.trans_wipe),
-                    getString(R.string.trans_uncover),
-                    getString(R.string.trans_cover)
-                }
-            ));
+                R.layout.support_simple_spinner_dropdown_item, new String[]{
+                getString(R.string.trans_none),
+                getString(R.string.trans_fade),
+                getString(R.string.trans_push),
+                getString(R.string.trans_wipe),
+                getString(R.string.trans_uncover),
+                getString(R.string.trans_cover)
+        }
+        ));
         transitionSpinner.setSelection(transition.getCategory().getValue(), true);
         transitionSpinner.setOnItemSelectedListener(transitionSpinnerListener);
 
         loadEffectOptions(transition.getType());
 
-        ((TextView)findViewById(R.id.duration_txt)).setText(String.valueOf(MainActivity.slideshow.slides.get(imageIdx).getTiming()));
-        ((TextView)findViewById(R.id.transition_duration_txt)).setText(String.valueOf(transition.getDuration()));
+        ((TextView) findViewById(R.id.duration_txt)).setText(String.valueOf(MainActivity.slideshow.slides.get(imageIdx).getTiming()));
+        ((TextView) findViewById(R.id.transition_duration_txt)).setText(String.valueOf(transition.getDuration()));
     }
 
     @Override
@@ -113,13 +114,14 @@ public class TransitionActivity extends AppCompatActivity {
 
         try {
             MainActivity.slideshow.slides.get(imageIdx).setTiming(
-                Funcs.convertToDouble(((EditText)findViewById(R.id.duration_txt)).getText().toString()));
-        } catch (Exception ignored) {}
+                    Funcs.convertToDouble(((EditText) findViewById(R.id.duration_txt)).getText().toString()));
+        } catch (Exception ignored) {
+        }
     }
 
     private void applyTransition(int idx) {
         Transition transition = MainActivity.slideshow.slides.get(idx).transition;
-        int selectedIdx = ((Spinner)findViewById(R.id.transition_spinner)).getSelectedItemPosition();
+        int selectedIdx = ((Spinner) findViewById(R.id.transition_spinner)).getSelectedItemPosition();
 
         switch (TransitionCategory.fromValue(selectedIdx)) {
             case FADE:
@@ -127,7 +129,7 @@ public class TransitionActivity extends AppCompatActivity {
             case WIPE:
             case UNCOVER:
             case COVER:
-                transition.setType((selectedIdx * 10) + ((Spinner)findViewById(R.id.effect_spinner)).getSelectedItemPosition());
+                transition.setType((selectedIdx * 10) + ((Spinner) findViewById(R.id.effect_spinner)).getSelectedItemPosition());
                 break;
             case NONE:
             default:
@@ -137,8 +139,9 @@ public class TransitionActivity extends AppCompatActivity {
 
         try {
             transition.setDuration(
-                Funcs.convertToDouble(((EditText)findViewById(R.id.transition_duration_txt)).getText().toString()));
-        } catch (Exception ignored) {}
+                    Funcs.convertToDouble(((EditText) findViewById(R.id.transition_duration_txt)).getText().toString()));
+        } catch (Exception ignored) {
+        }
     }
 
     public void onApplyAllClick(View v) {
@@ -147,8 +150,9 @@ public class TransitionActivity extends AppCompatActivity {
 
             try {
                 MainActivity.slideshow.slides.get(i).setTiming(
-                    Funcs.convertToDouble(((EditText)findViewById(R.id.duration_txt)).getText().toString()));
-            } catch (Exception ignored) {}
+                        Funcs.convertToDouble(((EditText) findViewById(R.id.duration_txt)).getText().toString()));
+            } catch (Exception ignored) {
+            }
         }
         finish();
     }
@@ -171,23 +175,23 @@ public class TransitionActivity extends AppCompatActivity {
             findViewById(R.id.duration_panel).setVisibility(View.VISIBLE);
 
             if (type == TransitionType.FADE || type == TransitionType.FADE_THROUGH_BLACK) {
-                options = new String[] {
-                    getString(R.string.trans_smoothly),
-                    getString(R.string.trans_through_black)
+                options = new String[]{
+                        getString(R.string.trans_smoothly),
+                        getString(R.string.trans_through_black)
                 };
             } else {
-                options = new String[] {
-                    getString(R.string.trans_from_left),
-                    getString(R.string.trans_from_right),
-                    getString(R.string.trans_from_top),
-                    getString(R.string.trans_from_bottom)
+                options = new String[]{
+                        getString(R.string.trans_from_left),
+                        getString(R.string.trans_from_right),
+                        getString(R.string.trans_from_top),
+                        getString(R.string.trans_from_bottom)
                 };
             }
         }
 
         Spinner effectSpinner = findViewById(R.id.effect_spinner);
         effectSpinner.setAdapter(new ArrayAdapter<>(TransitionActivity.this,
-            R.layout.support_simple_spinner_dropdown_item, options));
+                R.layout.support_simple_spinner_dropdown_item, options));
         effectSpinner.setSelection(type.getDirection().getValue(), true);
     }
 }
