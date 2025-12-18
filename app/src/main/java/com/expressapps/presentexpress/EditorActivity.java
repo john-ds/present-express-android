@@ -1,45 +1,62 @@
 package com.expressapps.presentexpress;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.expressapps.presentexpress.helper.FilterItem;
 import com.expressapps.presentexpress.helper.Funcs;
 import com.expressapps.presentexpress.helper.ImageFilter;
 import com.expressapps.presentexpress.helper.ImageSlide;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.slider.Slider;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
-import java.util.Objects;
+import javax.annotation.Nullable;
 
 public class EditorActivity extends AppCompatActivity {
     private Bitmap originalImage;
     private FilterItem filtersApplied = new FilterItem();
     private int imageIdx = 0;
+    private static final BiMap<Integer, ImageFilter> filterMap = HashBiMap.create();
+
+    static {
+        filterMap.put(R.id.greyscalefilter, ImageFilter.GREYSCALE);
+        filterMap.put(R.id.sepiafilter, ImageFilter.SEPIA);
+        filterMap.put(R.id.blackwhitefilter, ImageFilter.BLACK_WHITE);
+        filterMap.put(R.id.redfilter, ImageFilter.RED);
+        filterMap.put(R.id.greenfilter, ImageFilter.GREEN);
+        filterMap.put(R.id.bluefilter, ImageFilter.BLUE);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme_GradientStatusBar);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editor);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.photo_editor);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setContentView(R.layout.activity_editor);
+
+        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
+        topAppBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         Slider brightnessSlider = findViewById(R.id.brightness);
         brightnessSlider.addOnChangeListener((slider, value, fromUser) -> {
@@ -89,53 +106,89 @@ public class EditorActivity extends AppCompatActivity {
                     Funcs.transformRange(filtersApplied.getContrast(), 1f, 2f, 0f, 100f)));
         }
 
+        if (filtersApplied.getFilter() != ImageFilter.NONE) {
+            @Nullable Integer id = filterMap.inverse().get(filtersApplied.getFilter());
+            if (id != null) ((MaterialButton) findViewById(id)).setChecked(true);
+        }
+
         MaterialCheckBox checkh = findViewById(R.id.fliphorizontal);
         checkh.setChecked(filtersApplied.flipHorizontal);
         MaterialCheckBox checkv = findViewById(R.id.flipvertical);
         checkv.setChecked(filtersApplied.flipVertical);
         refreshImage();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_editor_drawer, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+        ScrollView scroller = findViewById(R.id.scroller);
+        ExtendedFloatingActionButton fab = findViewById(R.id.fab_done);
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
+        OnApplyWindowInsetsListener listener = (v, insets) -> {
+            Insets in = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            v.setPadding(in.left, 0, in.right, 0);
+            return insets;
+        };
 
-    @SuppressLint("MissingSuperCall")
-    @Override
-    public void onBackPressed() {
-        Funcs.showDialog(EditorActivity.this, R.string.editor_apply_changes, R.string.close_editor, (d, b) -> {
-            switch (b) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    applyChanges();
-                    finish();
-                    break;
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.toolbar), listener);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.previewlayout), listener);
 
-                case DialogInterface.BUTTON_NEGATIVE:
-                    finish();
-                    break;
+        Insets[] systemInsets = {null};
+        Runnable updateScrollerPadding = () -> {
+            if (systemInsets[0] != null && fab.getHeight() > 0) {
+                Insets in = systemInsets[0];
+                int bottomPadding = in.bottom + fab.getHeight() + Funcs.toDp(16);
+                scroller.setPadding(in.left, 0, in.right, bottomPadding);
+            }
+        };
+
+        ViewCompat.setOnApplyWindowInsetsListener(scroller, (v, insets) -> {
+            systemInsets[0] = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.ime());
+            updateScrollerPadding.run();
+            return insets;
+        });
+
+        fab.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                fab.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                updateScrollerPadding.run();
+            }
+        });
+
+        ViewCompat.setOnApplyWindowInsetsListener(fab, (v, insets) -> {
+            Insets in = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.ime());
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+
+            int margin = Funcs.toDp(20);
+            params.setMargins(0, 0, in.right + margin, in.bottom + margin);
+
+            v.setLayoutParams(params);
+            return insets;
+        });
+
+        // Handle back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Funcs.showDialog(EditorActivity.this, R.string.editor_apply_changes, R.string.close_editor, (d, b) -> {
+                    switch (b) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            applyChangesAndFinish();
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            finish();
+                            break;
+                    }
+                });
             }
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.nav_apply) {
-            applyChanges();
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+    public void onFabClick(View v) {
+        applyChangesAndFinish();
     }
 
-    private void applyChanges() {
+    private void applyChangesAndFinish() {
         ((ImageSlide) MainActivity.slideshow.slides.get(imageIdx)).filters = filtersApplied;
+        finish();
     }
 
     private void refreshImage() {
@@ -158,49 +211,32 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
-    private void resetFilterButtons() {
-        findViewById(R.id.greyscalefilter).setBackgroundColor(Color.WHITE);
-        findViewById(R.id.sepiafilter).setBackgroundColor(Color.WHITE);
-        findViewById(R.id.blackwhitefilter).setBackgroundColor(Color.WHITE);
-        findViewById(R.id.redfilter).setBackgroundColor(Color.WHITE);
-        findViewById(R.id.greenfilter).setBackgroundColor(Color.WHITE);
-        findViewById(R.id.bluefilter).setBackgroundColor(Color.WHITE);
+    private void resetFilterButtons(@IdRes int... except) {
+        for (int buttonId : filterMap.keySet()) {
+            if (except.length == 0 || buttonId != except[0]) {
+                MaterialButton button = findViewById(buttonId);
+                button.setChecked(false);
+            }
+        }
     }
 
     private void updateChosenFilter(ImageFilter filter, @IdRes int id) {
-        resetFilterButtons();
+        resetFilterButtons(id);
+
         if (filtersApplied.getFilter() == filter) {
             filtersApplied.setFilter(ImageFilter.NONE);
         } else {
-            findViewById(id).setBackgroundColor(
-                    ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
             filtersApplied.setFilter(filter);
         }
         refreshImage();
     }
 
-    public void onGreyscaleClick(View v) {
-        updateChosenFilter(ImageFilter.GREYSCALE, R.id.greyscalefilter);
-    }
-
-    public void onSepiaClick(View v) {
-        updateChosenFilter(ImageFilter.SEPIA, R.id.sepiafilter);
-    }
-
-    public void onBlackWhiteClick(View v) {
-        updateChosenFilter(ImageFilter.BLACK_WHITE, R.id.blackwhitefilter);
-    }
-
-    public void onRedTintClick(View v) {
-        updateChosenFilter(ImageFilter.RED, R.id.redfilter);
-    }
-
-    public void onGreenTintClick(View v) {
-        updateChosenFilter(ImageFilter.GREEN, R.id.greenfilter);
-    }
-
-    public void onBlueTintClick(View v) {
-        updateChosenFilter(ImageFilter.BLUE, R.id.bluefilter);
+    public void onFilterButtonClick(View v) {
+        int id = v.getId();
+        ImageFilter filter = filterMap.get(id);
+        if (filter != null) {
+            updateChosenFilter(filter, id);
+        }
     }
 
     public void onRotateRightClick(View v) {

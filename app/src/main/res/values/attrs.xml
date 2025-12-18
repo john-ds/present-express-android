@@ -9,5 +9,6 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
     <integer name="design_snackbar_text_max_lines" tools:ignore="PrivateResource">5</integer>
+    <bool name="light_navigation_bars">true</bool>
 
 </resources>

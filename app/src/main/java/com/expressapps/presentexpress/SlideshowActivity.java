@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -15,15 +16,22 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.expressapps.presentexpress.helper.Funcs;
 import com.expressapps.presentexpress.helper.Slide;
+import com.expressapps.presentexpress.helper.SlideshowSoundtrack;
 import com.expressapps.presentexpress.helper.Transition;
 import com.expressapps.presentexpress.helper.TransitionCategory;
 import com.expressapps.presentexpress.helper.TransitionDirection;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -70,14 +78,18 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
     int currentSlide = -1;
     private boolean transitionRunning = false;
     private boolean loopOn;
+    private boolean loopSoundtrackOn;
     private boolean useTimings;
     private List<Slide> slides;
+    private List<File> soundtrack = new ArrayList<>();
+    private int nextTrack = 0;
 
     private ImageView photoImg;
     private ImageView photoImgOther;
     private FrameLayout photoGrid;
     private FrameLayout photoGridOther;
     private ValueAnimator valAnimator;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -97,14 +109,27 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
         photoGridOther.setBackgroundColor(MainActivity.slideshow.info.getBackColour());
 
         loopOn = MainActivity.slideshow.info.loop;
+        loopSoundtrackOn = MainActivity.slideshow.info.soundtrack.loop;
         useTimings = MainActivity.slideshow.info.useTimings;
         slides = MainActivity.slideshow.slides;
+        loadSoundtrack(MainActivity.slideshow.info.soundtrack);
 
         gestureDetector = new GestureDetector(this, new MyGestureDetector());
         gestureListener = (v, event) -> gestureDetector.onTouchEvent(event);
 
         mContentView.setOnClickListener(SlideshowActivity.this);
         mContentView.setOnTouchListener(gestureListener);
+
+        // Handle back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                stopTransition();
+                stopTimer();
+                stopPlayer();
+                finish();
+            }
+        });
     }
 
     @Override
@@ -115,6 +140,7 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide();
+        playNextTrack();
         mHideHandler.postDelayed(this::loadNext, 200);
     }
 
@@ -175,6 +201,62 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
     private void loadStart() {
         currentSlide = -1;
         loadNext();
+    }
+
+    private void loadSoundtrack(SlideshowSoundtrack track) {
+        mediaPlayer.setOnCompletionListener(mp -> playNextTrack());
+
+        for (String name : track.filenames) {
+            try {
+                File tempFile = File.createTempFile("audio", name, this.getCacheDir());
+                FileOutputStream fos = new FileOutputStream(tempFile);
+                fos.write(track.audio.get(name));
+                fos.close();
+
+                soundtrack.add(tempFile);
+
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
+    private void playNextTrack() {
+        if (mediaPlayer == null || soundtrack.isEmpty()) return;
+
+        if (nextTrack >= soundtrack.size()) {
+            if (loopSoundtrackOn) {
+                nextTrack = 0;
+            } else {
+                return; // No more tracks to play
+            }
+        }
+
+        try {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
+            mediaPlayer.reset();
+
+            File file = soundtrack.get(nextTrack);
+            mediaPlayer.setDataSource(file.getAbsolutePath());
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+
+        } catch (IOException ignored) {
+            playNextTrack();
+        } finally {
+            nextTrack++;
+        }
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void stopPlayer() {
+        mediaPlayer.release();
+        mediaPlayer = null;
+
+        for (File file : soundtrack) {
+            file.delete();
+        }
     }
 
     @SuppressLint({"CutPasteId", "RtlHardcoded"})
@@ -399,6 +481,7 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
         Funcs.newMessage(getApplicationContext(), R.string.end, Toast.LENGTH_SHORT);
         timer.cancel();
         timer.purge();
+        stopPlayer();
         finish();
     }
 
@@ -412,17 +495,9 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
     }
 
-    @Override
-    public void onBackPressed() {
-        stopTransition();
-        timer.cancel();
-        timer.purge();
-        super.onBackPressed();
-    }
-
     class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
             try {
                 if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) return false;
 
@@ -437,13 +512,13 @@ public class SlideshowActivity extends AppCompatActivity implements View.OnClick
         }
 
         @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
+        public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
             toggle();
             return super.onSingleTapConfirmed(e);
         }
 
         @Override
-        public boolean onDown(MotionEvent e) {
+        public boolean onDown(@NonNull MotionEvent e) {
             return true;
         }
     }

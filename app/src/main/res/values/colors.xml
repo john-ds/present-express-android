@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#E57302</color>
-    <color name="colorAccent">#F97D02</color>
-    <color name="white">#ffffff</color>
+    <color name="colorLight">#FFF1DE</color>
+    <color name="colorLightStatic">#FFF1DE</color>
+    <color name="colorMedium">#FFDDB1</color>
+    <color name="colorDark">#A05E00</color>
+    <color name="colorText">#2F3C48</color>
+    <color name="colorBackground">#FFFFFF</color>
+
     <color name="black_overlay">#66000000</color>
     <color name="slide_color">#000</color>
-    <color name="text_color">#323232</color>
-    <color name="ripple_color">#BCBCBC</color>
-    <color name="colorLight">#FFF1DE</color>
-
-    <!-- slide colours -->
-    <color name="slide_lightgrey">#d3d3d3</color>
 </resources>

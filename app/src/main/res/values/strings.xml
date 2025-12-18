@@ -3,7 +3,6 @@
 
     <string name="nav_open">Open</string>
     <string name="nav_save">Save</string>
-    <string name="started_info">Add a picture using the button below.</string>
     <string name="started_title">Let\'s get started</string>
     <string name="play_slideshow">Play slideshow</string>
     <string name="use_slide_timings">Use slide timings</string>
@@ -15,7 +14,6 @@
     <string name="present_express_logo">Present Express logo</string>
     <string name="present_express">Present Express</string>
     <string name="express_apps_and_j_logos">Express Apps and J logos</string>
-    <string name="express">Present Express is part of Express Apps © John D. Colour icons from icons8.com and illustrations from Freepik</string>
     <string name="visit_our_website">Visit our website</string>
     <string name="choose_colour">Choose a colour…</string>
     <string name="select_present">Please select a .present file</string>
@@ -42,7 +40,6 @@
     <string name="select_image">Select Image</string>
     <string name="about_present">About Present Express</string>
     <string name="end">Slideshow ended.</string>
-    <string name="add_slides">Add slides</string>
     <string name="help_guide">Help guide</string>
     <string name="clear_all_slides">Clear all slides</string>
     <string name="sure_clear">Are you sure you want to clear all slides? This can\'t be undone.</string>
@@ -68,16 +65,11 @@
     <string name="red_tint">Red Tint</string>
     <string name="blue_tint">Blue Tint</string>
     <string name="green_tint">Green Tint</string>
-    <string name="apply_changes">Apply changes</string>
     <string name="close_editor">Closing photo editor</string>
     <string name="editor_apply_changes">Do you want to apply any changes you\'ve made first?</string>
-    <string name="unknown_version">Unknown Version</string>
     <string name="set_transition">Set transition</string>
     <string name="closing_transition_editor">Closing transition editor</string>
     <string name="secs">secs.</string>
-    <string name="advance_next_slide">Advance to next slide after…</string>
-    <string name="select_transition">Select a transition</string>
-    <string name="trans_none">None</string>
     <string name="trans_fade">Fade</string>
     <string name="trans_push">Push</string>
     <string name="trans_wipe">Wipe</string>
@@ -94,4 +86,27 @@
     <string name="transition_duration">Transition duration</string>
     <string name="trans_duration_range">Enter a value from 0.1 to 10 seconds</string>
     <string name="slide_duration_range">Enter a value from 0.5 to 25 seconds</string>
+    <string name="add_images">Add images</string>
+    <string name="back">Back</string>
+    <string name="copyright">Present Express is part of Express Apps copyright © John D</string>
+    <string name="done">Done</string>
+    <string name="time_spent">Time spent on slide</string>
+    <string name="transition">Transition</string>
+    <string name="restart_app">Restart the app to apply the changes.</string>
+    <string name="interface_theme">Interface theme</string>
+    <string name="theme_light">Light mode</string>
+    <string name="theme_dark">Dark mode</string>
+    <string name="theme_follow">Follow system theme</string>
+    <string name="soundtrack_load_error">One or more audio files couldn\'t be loaded in this slideshow\'s soundtrack.</string>
+    <string name="title_activity_soundtrack">Soundtrack editor</string>
+    <string name="audio_files">Audio files</string>
+    <string name="add_audio_files">Add audio files</string>
+    <string name="loop_soundtrack">Loop soundtrack</string>
+    <string name="soundtrack">Soundtrack</string>
+    <string name="play_audio">Play audio</string>
+    <string name="slide_options">Slide options</string>
+    <string name="closing_soundtrack_editor">Closing soundtrack editor</string>
+    <string name="unsupported_audio">We couldn\'t add some audio files because they\'re unsupported or exceeded 15MB.</string>
+    <string name="audio_limit_exceeded">We couldn\'t add some audio files because you\'ve exceeded the limit of 10 files.</string>
+    <string name="select_audio_files">Select Audio Files</string>
 </resources>

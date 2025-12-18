@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorBackground"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,25 +13,10 @@
         android:id="@+id/base_status_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradient_color"
-        tools:ignore="MissingConstraints"
+        android:background="@color/colorLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar" />
-
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/gradient_color"
-        android:textSize="17sp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/base_status_bar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -38,103 +24,187 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="horizontal|vertical"
-        android:background="@color/white"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/base_status_bar" />
 
 
     <ScrollView
-        android:id="@+id/welcomelayout"
+        android:id="@+id/welcome_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
+        android:background="@color/colorBackground"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false"
         android:scrollbars="horizontal|vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/base_status_bar">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingTop="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="40dp"
-                android:adjustViewBounds="true"
-                android:maxHeight="250dp"
-                android:src="@drawable/export_loader"
-                android:importantForAccessibility="no" />
+            <LinearLayout
+                android:id="@+id/welcome_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="UseCompoundDrawables"
+                android:gravity="center_vertical"
+                android:layout_margin="20dp">
 
-            <TextView
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/present_express_logo"
+                    android:src="@drawable/present_logo"
+                    android:layout_marginEnd="15dp" />
+
+                <TextView
+                    android:id="@+id/welcome_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textFontWeight="600"
+                    android:text="@string/present_express"
+                    android:textSize="22sp"
+                    android:textColor="@color/colorDark"
+                    tools:targetApi="28" />
+
+            </LinearLayout>
+
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:fontFamily="sans-serif-medium"
-                android:paddingBottom="5dp"
-                android:text="@string/started_title"
-                android:textAlignment="center"
-                android:textColor="@color/text_color"
-                android:textSize="24sp" />
+                app:justifyContent="center"
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/welcome_container">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:paddingBottom="50dp"
-                android:text="@string/started_info"
-                android:textAlignment="center"
-                android:textColor="@color/text_color" />
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginHorizontal="40dp"
+                    android:src="@drawable/welcome_graphic"
+                    android:importantForAccessibility="no" />
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:paddingBottom="10dp"
+                        android:text="@string/started_title"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorText"
+                        android:textFontWeight="600"
+                        android:textSize="24sp"
+                        tools:targetApi="28" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/add_images"
+                        android:onClick="addImage_click"
+                        app:icon="@drawable/icon_add_24"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </ScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        app:backgroundTint="@color/colorAccent"
-        android:contentDescription="@string/add_slides"
-        android:onClick="addImage_click"
-        android:src="@drawable/ic_round_add_24"
-        app:tint="@color/white"
-        app:fabSize="normal"
+    <LinearLayout
+        android:id="@+id/bottom_bar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/drawer_layout" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="90dp"
-        android:layout_marginBottom="20dp"
-        app:backgroundTint="@color/colorAccent"
-        android:contentDescription="@string/play_slideshow"
-        android:onClick="show_click"
-        android:src="@drawable/ic_round_play_arrow_24"
-        android:visibility="invisible"
-        app:fabSize="normal"
-        app:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/drawer_layout" />
+        android:layout_height="wrap_content">
 
-    <View
-        android:background="@drawable/toolbar_shadow"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:layout_height="5dp"
-        android:layout_width="match_parent" />
+        <com.google.android.material.floatingtoolbar.FloatingToolbarLayout
+            android:id="@+id/floating_toolbar"
+            style="@style/Widget.Material3.FloatingToolbar"
+            android:elevation="2dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <com.google.android.material.overflow.OverflowLinearLayout
+                android:id="@+id/floating_toolbar_child"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/floating_toolbar_button_add"
+                    style="@style/ToolbarButton"
+                    android:contentDescription="@string/add_images"
+                    app:icon="@drawable/icon_add_24"
+                    android:onClick="addImage_click"
+                    app:layout_overflowText="@string/add_images" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/floating_toolbar_button_open"
+                    style="@style/ToolbarButton"
+                    android:contentDescription="@string/nav_open"
+                    app:icon="@drawable/icon_folder_24"
+                    android:onClick="open_click"
+                    app:layout_overflowText="@string/nav_open" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/floating_toolbar_button_save"
+                    style="@style/ToolbarButton"
+                    android:contentDescription="@string/nav_save"
+                    app:icon="@drawable/icon_save_24"
+                    android:onClick="save_click"
+                    app:layout_overflowText="@string/nav_save" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/floating_toolbar_button_settings"
+                    style="@style/ToolbarButton"
+                    android:contentDescription="@string/slideshow_settings"
+                    app:icon="@drawable/icon_settings_24"
+                    android:onClick="settings_click"
+                    app:layout_overflowText="@string/slideshow_settings" />
+
+            </com.google.android.material.overflow.OverflowLinearLayout>
+
+        </com.google.android.material.floatingtoolbar.FloatingToolbarLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"
+            android:onClick="show_click"
+            android:contentDescription="@string/play_slideshow"
+            app:srcCompat="@drawable/icon_play_24" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

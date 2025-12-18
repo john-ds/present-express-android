@@ -56,17 +56,22 @@ public class SlideshowInfo {
     @Element(name = "timings", required = false)
     public boolean useTimings;
 
+    @Element(name = "soundtrack", required = false)
+    public SlideshowSoundtrack soundtrack = new SlideshowSoundtrack();
+
     public SlideshowInfo(@Element(name = "width") int width,
                          @Element(name = "height") int height,
                          @Element(name = "color") String color,
                          @Element(name = "fit") boolean fitToSlide,
                          @Element(name = "loop") boolean loop,
-                         @Element(name = "timings") boolean useTimings) {
+                         @Element(name = "timings") boolean useTimings,
+                         @Element(name = "soundtrack") SlideshowSoundtrack soundtrack) {
         setWidth(width);
         setBackColour(color);
         this.fitToSlide = fitToSlide;
         this.loop = loop;
         this.useTimings = useTimings;
+        this.soundtrack = soundtrack;
     }
 
     public SlideshowInfo() {

@@ -11,32 +11,41 @@
         android:id="@+id/base_status_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradient_color"
-        tools:ignore="MissingConstraints"
+        android:background="@color/colorLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/gradient_color"
-        android:textSize="17sp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/base_status_bar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:title="@string/set_transition"
+            app:navigationIcon="@drawable/icon_back_24"
+            app:titleTextColor="@color/colorText"
+            app:navigationIconTint="@color/colorText"
+            app:navigationContentDescription="@string/back" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
 
     <ScrollView
+        android:id="@+id/scroller"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
+        android:background="@color/colorBackground"
         android:orientation="vertical"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,200 +57,234 @@
             android:orientation="vertical"
             android:paddingVertical="20dp">
 
-            <TextView
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/duration_txt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
-                android:fontFamily="sans-serif-medium"
-                android:paddingTop="10dp"
-                android:text="@string/advance_next_slide"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                android:labelFor="@+id/duration_txt" />
+                android:hint="@string/time_spent"
+                app:helperText="@string/slide_duration_range"
+                app:suffixText="@string/secs">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="25dp"
-                android:fontFamily="sans-serif"
-                android:text="@string/slide_duration_range"
-                android:textColor="@color/text_color"
-                android:paddingBottom="5dp"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginHorizontal="20dp">
-
-                <EditText
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/duration_txt"
-                    android:layout_marginHorizontal="0dp"
-                    android:paddingHorizontal="5dp"
                     android:inputType="numberDecimal"
-                    android:importantForAutofill="no" />
+                    android:importantForAutofill="no"
+                    android:textColor="@color/colorText" />
 
-                <TextView
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:layout_marginVertical="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimary"
+                android:layout_marginHorizontal="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:paddingVertical="10dp"
+                android:labelFor="@+id/transition_group"
+                android:text="@string/transition"
+                android:textColor="@color/colorText"
+                android:textSize="16sp" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBackground"
+                android:paddingHorizontal="25dp"
+                android:clipToPadding="false"
+                android:fillViewport="true">
+
+                <com.google.android.material.button.MaterialButtonGroup
+                    android:id="@+id/transition_group"
+                    style="@style/Widget.Material3.MaterialButtonGroup.Connected"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="@string/secs"
-                    android:textColor="@color/text_color"
-                    android:layout_marginHorizontal="10dp"
-                    android:textSize="16sp" />
+                    android:layout_marginBottom="10dp">
 
-            </LinearLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/fadetrans"
+                        android:text="@string/trans_fade"
+                        android:checkable="true"
+                        android:onClick="onTransitionButtonClick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-            <View
-                android:layout_marginVertical="25dp"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#c0c0c0"
-                android:layout_marginHorizontal="10dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/pushtrans"
+                        android:text="@string/trans_push"
+                        android:checkable="true"
+                        android:onClick="onTransitionButtonClick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/wipetrans"
+                        android:text="@string/trans_wipe"
+                        android:checkable="true"
+                        android:onClick="onTransitionButtonClick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/uncovertrans"
+                        android:text="@string/trans_uncover"
+                        android:checkable="true"
+                        android:onClick="onTransitionButtonClick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/covertrans"
+                        android:text="@string/trans_cover"
+                        android:checkable="true"
+                        android:onClick="onTransitionButtonClick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.button.MaterialButtonGroup>
+
+            </HorizontalScrollView>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
-                android:fontFamily="sans-serif-medium"
-                android:paddingTop="10dp"
-                android:paddingBottom="5dp"
-                android:text="@string/select_transition"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                android:labelFor="@id/transition_spinner" />
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="25dp"
-                android:id="@+id/transition_spinner"
-                android:minHeight="40dp"
-                android:layout_marginBottom="15dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="25dp"
-                android:fontFamily="sans-serif-medium"
-                android:paddingTop="10dp"
+                android:visibility="gone"
+                android:paddingTop="15dp"
                 android:paddingBottom="5dp"
                 android:text="@string/effect_options"
-                android:textColor="@color/text_color"
+                android:textColor="@color/colorText"
                 android:id="@+id/effect_spinner_lbl"
-                android:textSize="16sp"
-                android:visibility="gone"
-                android:labelFor="@id/effect_spinner" />
+                android:textSize="16sp" />
 
-            <Spinner
+            <RadioGroup
+                android:id="@+id/fade_options"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
-                android:id="@+id/effect_spinner"
-                android:minHeight="40dp"
-                android:visibility="gone"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:contentDescription="@string/effect_options">
 
-            <LinearLayout
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/fade_smoothly"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trans_smoothly"
+                    android:textSize="16sp"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/through_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trans_through_black"
+                    android:textSize="16sp"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/movement_options"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:id="@+id/duration_panel">
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginBottom="10dp"
+                android:contentDescription="@string/effect_options">
 
-                <TextView
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/from_left"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="25dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:paddingTop="10dp"
-                    android:text="@string/transition_duration"
-                    android:textColor="@color/text_color"
+                    android:text="@string/trans_from_left"
                     android:textSize="16sp"
-                    android:labelFor="@+id/transition_duration_txt" />
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
 
-                <TextView
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/from_right"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="25dp"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/trans_duration_range"
-                    android:textColor="@color/text_color"
-                    android:paddingBottom="5dp"
-                    android:textSize="14sp" />
+                    android:text="@string/trans_from_right"
+                    android:textSize="16sp"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
 
-                <LinearLayout
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/from_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginHorizontal="20dp">
+                    android:text="@string/trans_from_top"
+                    android:textSize="16sp"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
 
-                    <EditText
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:id="@+id/transition_duration_txt"
-                        android:layout_marginHorizontal="0dp"
-                        android:paddingHorizontal="5dp"
-                        android:inputType="numberDecimal"
-                        android:importantForAutofill="no" />
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/from_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trans_from_bottom"
+                    android:textSize="16sp"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/secs"
-                        android:textColor="@color/text_color"
-                        android:layout_marginHorizontal="10dp"
-                        android:textSize="16sp" />
+            </RadioGroup>
 
-                </LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/transition_duration_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:hint="@string/transition_duration"
+                app:helperText="@string/trans_duration_range"
+                app:suffixText="@string/secs"
+                android:visibility="gone">
 
-            </LinearLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:importantForAutofill="no"
+                    android:textColor="@color/colorText" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <View
+                android:layout_marginVertical="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="#c0c0c0"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="25dp" />
+                android:background="@color/colorPrimary"
+                android:layout_marginHorizontal="25dp" />
 
             <com.google.android.material.button.MaterialButton
+                style="@style/SettingsButton"
                 android:text="@string/apply_to_all_slides"
-                app:icon="@drawable/colours"
-                android:onClick="onApplyAllClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC" />
+                app:icon="@drawable/icon_done_all_24"
+                android:onClick="onApplyAllClick" />
 
         </LinearLayout>
+
     </ScrollView>
 
-    <View
-        android:background="@drawable/toolbar_shadow"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:layout_height="5dp"
-        android:layout_width="match_parent" />
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:onClick="onFabClick"
+        app:icon="@drawable/icon_check_24"
+        android:text="@string/done"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

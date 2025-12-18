@@ -17,9 +17,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
@@ -31,6 +30,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,12 +44,15 @@ import com.expressapps.presentexpress.helper.FilterItem;
 import com.expressapps.presentexpress.helper.Funcs;
 import com.expressapps.presentexpress.helper.ImageSlide;
 import com.expressapps.presentexpress.helper.Slide;
+import com.expressapps.presentexpress.helper.SlideItemAdapter;
 import com.expressapps.presentexpress.helper.SlideType;
 import com.expressapps.presentexpress.helper.SlideshowItem;
+import com.expressapps.presentexpress.helper.SlideshowSoundtrack;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingtoolbar.FloatingToolbarLayout;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.simpleframework.xml.core.Persister;
@@ -55,9 +60,11 @@ import org.simpleframework.xml.core.Persister;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
@@ -148,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
                                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                                 ImageSlide s = (ImageSlide) slideshow.slides.get(editingImageIdx);
 
-                                                s.name = generateNewName(MimeTypeMap.getSingleton()
-                                                        .getExtensionFromMimeType(getContentResolver().getType(uri)));
+                                                s.name = generateNewName(Objects.requireNonNull(MimeTypeMap.getSingleton()
+                                                        .getExtensionFromMimeType(getContentResolver().getType(Objects.requireNonNull(uri)))));
                                                 s.original = resource;
                                                 s.bitmap = applyFilters(resource, s.filters);
 
@@ -183,11 +190,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme_GradientStatusBar);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
         mFA = FirebaseAnalytics.getInstance(this);
 
         RecyclerView recyclerView = findViewById(R.id.image_grid);
@@ -197,48 +202,51 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new SlideItemAdapter(new ArrayList<>(), img_click);
         recyclerView.setAdapter(adapter);
-    }
 
-    // region Toolbar
+        View bottomBar = findViewById(R.id.bottom_bar);
+        ScrollView scrollView = findViewById(R.id.welcome_layout);
+        FloatingToolbarLayout layout = findViewById(R.id.floating_toolbar);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main_drawer, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+        bottomBar.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            scrollView.setPadding(
+                    scrollView.getPaddingLeft(),
+                    scrollView.getPaddingTop(),
+                    scrollView.getPaddingRight(),
+                    bottomBar.getHeight()
+            );
+            recyclerView.setPadding(
+                    recyclerView.getPaddingLeft(),
+                    recyclerView.getPaddingTop(),
+                    recyclerView.getPaddingRight(),
+                    bottomBar.getHeight()
+            );
+        });
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.nav_open) {
-            RecyclerView image_grid = findViewById(R.id.image_grid);
-            if (image_grid.getChildCount() == 0) {
-                startOpenIntent();
-            } else {
-                Funcs.showDialog(MainActivity.this, R.string.open_dialog, R.string.open, (d, b) -> {
-                    switch (b) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            startOpenIntent();
-                            break;
+        ViewCompat.setOnApplyWindowInsetsListener(scrollView, (v, insets) -> {
+            Insets in = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            v.setPadding(in.left, 0, in.right, in.bottom);
+            return insets;
+        });
 
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            d.cancel();
-                            break;
-                    }
-                });
-            }
-        } else if (itemId == R.id.nav_save) {
-            if (!slideshow.slides.isEmpty()) {
-                startSaveIntent();
-            } else {
-                Funcs.newMessage(getApplicationContext(), R.string.add_slide, Toast.LENGTH_SHORT);
-            }
-        } else if (itemId == R.id.nav_options) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            optionsLauncher.launch(intent);
-            Funcs.newEventLog(mFA, "nav_options", "Settings button clicked");
+        ViewCompat.setOnApplyWindowInsetsListener(layout, (v, insets) -> {
+            Insets in = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            FloatingActionButton fab = findViewById(R.id.fab_play);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+
+            params.leftMargin = in.left + Funcs.toDp(16);
+            params.topMargin = Funcs.toDp(16);
+            params.rightMargin = (fab.getVisibility() == View.VISIBLE ? 0 : in.right) + Funcs.toDp(16);
+            params.bottomMargin = in.bottom + Funcs.toDp(16);
+
+            v.setLayoutParams(params);
+            return insets;
+        });
+
+        Uri data = getIntent().getData();
+        if (data != null) {
+            getIntent().setData(null);
+            loadFile(data);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     // endregion
@@ -262,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
             boolean containsOtherContent = false;
             boolean otherContentFailed = false;
             boolean imageContentFailed = false;
+            boolean soundtrackContentFailed = false;
 
             ZipInputStream zipInputStream = new ZipInputStream(
                     new BufferedInputStream(getContentResolver().openInputStream(file)));
@@ -288,9 +297,13 @@ public class MainActivity extends AppCompatActivity {
 
             setBackgroundColour();
 
+            if (slideshow.info.soundtrack == null)
+                slideshow.info.soundtrack = new SlideshowSoundtrack();
+
             while (zipEntry != null) {
                 int idx = checkNameExists(zipEntry.getName());
                 if (idx != -1) {
+                    // image file
                     try {
                         Bitmap bitmap = BitmapFactory.decodeStream(zipInputStream);
                         Slide s = slideshow.slides.get(idx);
@@ -307,19 +320,17 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     idx = checkNameExists(zipEntry.getName(), true);
                     if (idx != -1 && slideshow.slides.get(idx).getSlideType() == SlideType.DRAWING) {
+                        // stroke data
                         try {
-                            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                            int nRead;
-                            byte[] data = new byte[1024];
-
-                            while ((nRead = zipInputStream.read(data, 0, data.length)) != -1)
-                                buffer.write(data, 0, nRead);
-
-                            buffer.flush();
-                            ((DrawingSlide) slideshow.slides.get(idx)).strokes = buffer.toByteArray();
-
+                            ((DrawingSlide) slideshow.slides.get(idx)).strokes = readCurrentZipEntry(zipInputStream);
                         } catch (Exception ignored) {
                             otherContentFailed = true;
+                        }
+                    } else if (slideshow.info.soundtrack.filenames.contains(zipEntry.getName())) {
+                        // audio file
+                        try {
+                            slideshow.info.soundtrack.audio.put(zipEntry.getName(), readCurrentZipEntry(zipInputStream));
+                        } catch (Exception ignored) {
                         }
                     }
                 }
@@ -327,6 +338,14 @@ public class MainActivity extends AppCompatActivity {
                 zipEntry = zipInputStream.getNextEntry();
             }
             zipInputStream.close();
+
+            for (Iterator<String> iterator = slideshow.info.soundtrack.filenames.iterator(); iterator.hasNext(); ) {
+                String i = iterator.next();
+                if (!slideshow.info.soundtrack.audio.containsKey(i)) {
+                    soundtrackContentFailed = true;
+                    iterator.remove();
+                }
+            }
 
             // clean slide list
             ArrayList<Slide> toReplace = new ArrayList<>();
@@ -352,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                     if (i.getSlideType() == SlideType.CHART || i.getSlideType() == SlideType.TEXT ||
                             i.getSlideType() == SlideType.DRAWING) containsOtherContent = true;
             }
-            findViewById(R.id.welcomelayout).setVisibility(View.GONE);
+            findViewById(R.id.welcome_layout).setVisibility(View.GONE);
             checkIsEmpty();
 
             if (imageContentFailed) {
@@ -363,6 +382,8 @@ public class MainActivity extends AppCompatActivity {
                         (d, b) -> {
                         }, "OK", null);
 
+            } else if (soundtrackContentFailed) {
+                Funcs.newLongMessage(MainActivity.this, R.string.soundtrack_load_error);
             } else if (containsOtherContent) {
                 Funcs.newLongMessage(MainActivity.this, R.string.only_images);
             }
@@ -406,13 +427,12 @@ public class MainActivity extends AppCompatActivity {
                 zipOutputStream.closeEntry();
 
                 if (i.getSlideType() == SlideType.DRAWING) {
-                    ZipEntry isfEntry = new ZipEntry(i.name);
-                    zipOutputStream.putNextEntry(isfEntry);
-
-                    byte[] isf = ((DrawingSlide) i).strokes;
-                    zipOutputStream.write(isf, 0, isf.length);
-                    zipOutputStream.closeEntry();
+                    writeZipEntry(zipOutputStream, i.name, ((DrawingSlide) i).strokes);
                 }
+            }
+
+            for (String i : slideshow.info.soundtrack.filenames) {
+                writeZipEntry(zipOutputStream, i, slideshow.info.soundtrack.audio.get(i));
             }
 
             ZipEntry entry = new ZipEntry("info.xml");
@@ -445,6 +465,39 @@ public class MainActivity extends AppCompatActivity {
         editingImageIdx = -1;
         pickImageLauncher.launch(chooserIntent);
         Funcs.newEventLog(mFA, "addImage", "Add images button clicked");
+    }
+
+    public void open_click(View view) {
+        RecyclerView image_grid = findViewById(R.id.image_grid);
+        if (image_grid.getChildCount() == 0) {
+            startOpenIntent();
+        } else {
+            Funcs.showDialog(MainActivity.this, R.string.open_dialog, R.string.open, (d, b) -> {
+                switch (b) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        startOpenIntent();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        d.cancel();
+                        break;
+                }
+            });
+        }
+    }
+
+    public void save_click(View view) {
+        if (!slideshow.slides.isEmpty()) {
+            startSaveIntent();
+        } else {
+            Funcs.newMessage(getApplicationContext(), R.string.add_slide, Toast.LENGTH_SHORT);
+        }
+    }
+
+    public void settings_click(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        optionsLauncher.launch(intent);
+        Funcs.newEventLog(mFA, "nav_options", "Settings button clicked");
     }
 
     public void show_click(View view) {
@@ -543,8 +596,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void createSlide(Uri uri) {
         ImageSlide s = new ImageSlide();
-        s.name = generateNewName(MimeTypeMap.getSingleton()
-                .getExtensionFromMimeType(getContentResolver().getType(uri)));
+        s.name = generateNewName(Objects.requireNonNull(MimeTypeMap.getSingleton()
+                .getExtensionFromMimeType(getContentResolver().getType(uri))));
 
         adapter.addItem(null);
         int idx = adapter.getItemCount() - 1;
@@ -620,7 +673,7 @@ public class MainActivity extends AppCompatActivity {
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
 
-        Bitmap ret = Bitmap.createBitmap(width, height, originalImage.getConfig());
+        Bitmap ret = Bitmap.createBitmap(width, height, Objects.requireNonNull(originalImage.getConfig()));
         Canvas canvas = new Canvas(ret);
         Paint paint = new Paint();
         paint.setColorFilter(new ColorMatrixColorFilter(clr));
@@ -655,8 +708,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkIsEmpty() {
-        ScrollView txtView = findViewById(R.id.welcomelayout);
-        FloatingActionButton fab = findViewById(R.id.fab2);
+        ScrollView txtView = findViewById(R.id.welcome_layout);
+        FloatingActionButton fab = findViewById(R.id.fab_play);
+        FloatingToolbarLayout layout = findViewById(R.id.floating_toolbar);
 
         if (!slideshow.slides.isEmpty()) {
             txtView.setVisibility(View.INVISIBLE);
@@ -665,6 +719,8 @@ public class MainActivity extends AppCompatActivity {
             txtView.setVisibility(View.VISIBLE);
             fab.hide();
         }
+
+        layout.requestApplyInsets();
     }
 
     private Bitmap.CompressFormat getFormat(String s) {
@@ -685,7 +741,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
 
             for (String i : formats) {
-                if (MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType).equals(i))
+                if (Objects.equals(MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType), i))
                     return true;
             }
             return false;
@@ -704,11 +760,11 @@ public class MainActivity extends AppCompatActivity {
                     DocumentFile.fromSingleUri(getApplicationContext(), uri)).length() / 1024 / 1024) > 50)
                 return false;
 
-            if (MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType) == null && mimeType.equals("application/octet-stream"))
+            if (MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType) == null && Objects.equals(mimeType, "application/octet-stream"))
                 return true;
 
             for (String i : formats) {
-                if (MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType).equals(i))
+                if (Objects.equals(MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType), i))
                     return true;
             }
             return false;
@@ -759,6 +815,26 @@ public class MainActivity extends AppCompatActivity {
     private void setBackgroundColour() {
         ((GradientDrawable) Objects.requireNonNull(ContextCompat.getDrawable(getBaseContext(), R.drawable.border)))
                 .setColor(slideshow.info.getBackColour());
+    }
+
+    private byte[] readCurrentZipEntry(ZipInputStream zipInputStream) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[1024];
+
+        while ((nRead = zipInputStream.read(data, 0, data.length)) != -1)
+            buffer.write(data, 0, nRead);
+
+        buffer.flush();
+        return buffer.toByteArray();
+    }
+
+    private void writeZipEntry(ZipOutputStream zipOutputStream, String name, byte[] data) throws IOException {
+        ZipEntry isfEntry = new ZipEntry(name);
+        zipOutputStream.putNextEntry(isfEntry);
+
+        zipOutputStream.write(data, 0, data.length);
+        zipOutputStream.closeEntry();
     }
 
     // endregion

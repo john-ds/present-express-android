@@ -11,32 +11,41 @@
         android:id="@+id/base_status_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradient_color"
-        tools:ignore="MissingConstraints"
+        android:background="@color/colorLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/gradient_color"
-        android:textSize="17sp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/base_status_bar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:title="@string/slideshow_settings"
+            app:navigationIcon="@drawable/icon_back_24"
+            app:titleTextColor="@color/colorText"
+            app:navigationIconTint="@color/colorText"
+            app:navigationContentDescription="@string/back" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
 
     <ScrollView
+        android:id="@+id/scroller"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
+        android:background="@color/colorBackground"
         android:orientation="vertical"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,209 +58,76 @@
             android:paddingVertical="20dp">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/background_button"
+                style="@style/SettingsButton"
                 android:text="@string/background_colour"
-                app:icon="@drawable/colours"
-                android:onClick="onBackColorClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC" />
+                app:icon="@drawable/icon_circle_24"
+                android:onClick="onBackColorClick" />
 
             <com.google.android.material.button.MaterialButton
+                style="@style/SettingsButton"
+                android:text="@string/soundtrack"
+                app:icon="@drawable/icon_music_24"
+                android:onClick="onSoundtrackClick" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/SettingsButton"
                 android:text="@string/all_timings"
-                app:icon="@drawable/recent"
-                android:onClick="onSetTimingsClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC" />
+                app:icon="@drawable/icon_clock_24"
+                android:onClick="onSetTimingsClick" />
 
             <com.google.android.material.button.MaterialButton
+                style="@style/SettingsButton"
                 android:text="@string/clear_all_slides"
-                app:icon="@drawable/erase"
-                android:onClick="onClearSlidesClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC" />
+                app:icon="@drawable/icon_delete_24"
+                android:onClick="onClearSlidesClick" />
 
             <View
                 android:layout_marginVertical="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="#c0c0c0"
-                android:layout_marginHorizontal="10dp" />
+                android:background="@color/colorPrimary"
+                android:layout_marginHorizontal="25dp" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
+                style="@style/SettingsCheckBox"
                 android:id="@+id/loop_check"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/loop"
-                android:onClick="onLoopClick"
-                android:layout_marginHorizontal="24dp"
-                android:layout_gravity="center"
-                android:fontFamily="sans-serif-medium"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC" />
+                android:onClick="onLoopClick" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
+                style="@style/SettingsCheckBox"
                 android:id="@+id/timing_check"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/use_slide_timings"
-                android:onClick="onUseTimingsClick"
-                android:layout_marginHorizontal="24dp"
-                android:layout_gravity="center"
-                android:fontFamily="sans-serif-medium"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC" />
+                android:onClick="onUseTimingsClick" />
 
             <View
                 android:layout_marginVertical="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="#c0c0c0"
-                android:layout_marginHorizontal="10dp" />
+                android:background="@color/colorPrimary"
+                android:layout_marginHorizontal="25dp" />
 
             <com.google.android.material.button.MaterialButton
+                style="@style/SettingsButton"
+                android:id="@+id/theme_button"
+                android:text="@string/interface_theme"
+                app:icon="@drawable/icon_design_24"
+                android:onClick="onThemeClick" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/SettingsButton"
                 android:text="@string/about_present"
-                app:icon="@drawable/info"
-                android:onClick="onAboutClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC" />
+                app:icon="@drawable/icon_info_24"
+                android:onClick="onAboutClick" />
 
             <com.google.android.material.button.MaterialButton
+                style="@style/SettingsButton"
                 android:text="@string/help_guide"
-                app:icon="@drawable/help"
-                android:onClick="onHelpClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:backgroundTint="#fff"
-                android:gravity="center_vertical"
-                android:letterSpacing="0"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="5dp"
-                android:stateListAnimator="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"
-                app:backgroundTint="#F6F6F6"
-                app:cornerRadius="10dp"
-                app:iconGravity="start"
-                app:iconPadding="15dp"
-                app:iconSize="30dp"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add"
-                app:rippleColor="#BCBCBC" />
+                app:icon="@drawable/icon_help_24"
+                android:onClick="onHelpClick" />
 
         </LinearLayout>
     </ScrollView>
 
-    <View
-        android:background="@drawable/toolbar_shadow"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:layout_height="5dp"
-        android:layout_width="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

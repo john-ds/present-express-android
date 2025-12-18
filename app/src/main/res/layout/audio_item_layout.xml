@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemLayout">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:importantForAccessibility="no"
+        android:src="@drawable/icon_music_24"
+        app:tint="@color/colorText"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="15dp" />
+
+    <TextView
+        android:id="@+id/itemLayoutName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:layout_marginEnd="10dp"
+        android:maxLines="1"
+        android:ellipsize="middle"
+        android:textSize="16sp" />
+
+    <com.google.android.material.button.MaterialButton
+        style="?attr/materialIconButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:backgroundTint="@color/colorBackground"
+        android:gravity="center"
+        app:rippleColor="@color/colorMedium"
+        android:stateListAnimator="@null"
+        android:contentDescription="@string/play_audio"
+        app:icon="@drawable/icon_play_24"
+        app:iconTint="@color/colorDark"
+        android:id="@+id/imgLayoutPlayBtn" />
+
+    <com.google.android.material.button.MaterialButton
+        style="?attr/materialIconButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
+        app:backgroundTint="@color/colorBackground"
+        android:gravity="center"
+        app:rippleColor="@color/colorMedium"
+        android:stateListAnimator="@null"
+        app:icon="@drawable/icon_delete_24"
+        app:iconTint="@color/colorDark"
+        android:contentDescription="@string/remove"
+        android:id="@+id/imgLayoutRemoveBtn" />
+
+</LinearLayout>

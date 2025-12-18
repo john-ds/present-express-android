@@ -1,145 +1,177 @@
 package com.expressapps.presentexpress;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.RadioGroup;
+import android.widget.ScrollView;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.expressapps.presentexpress.helper.Funcs;
 import com.expressapps.presentexpress.helper.Transition;
 import com.expressapps.presentexpress.helper.TransitionCategory;
+import com.expressapps.presentexpress.helper.TransitionDirection;
 import com.expressapps.presentexpress.helper.TransitionType;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+
 public class TransitionActivity extends AppCompatActivity {
     private int imageIdx = 0;
+    private TransitionCategory selectedTransitionCategory = TransitionCategory.NONE;
+    private static final BiMap<Integer, TransitionCategory> transitionMap = HashBiMap.create();
+    private static final BiMap<Integer, TransitionDirection> directionMap = HashBiMap.create();
 
-    private final AdapterView.OnItemSelectedListener transitionSpinnerListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            loadEffectOptions(TransitionCategory.fromValue(position));
-        }
+    static {
+        transitionMap.put(R.id.fadetrans, TransitionCategory.FADE);
+        transitionMap.put(R.id.pushtrans, TransitionCategory.PUSH);
+        transitionMap.put(R.id.wipetrans, TransitionCategory.WIPE);
+        transitionMap.put(R.id.uncovertrans, TransitionCategory.UNCOVER);
+        transitionMap.put(R.id.covertrans, TransitionCategory.COVER);
 
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-        }
-    };
+        directionMap.put(R.id.from_left, TransitionDirection.LEFT);
+        directionMap.put(R.id.from_right, TransitionDirection.RIGHT);
+        directionMap.put(R.id.from_top, TransitionDirection.TOP);
+        directionMap.put(R.id.from_bottom, TransitionDirection.BOTTOM);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme_GradientStatusBar);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transition);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.set_transition);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setContentView(R.layout.activity_transition);
+
+        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
+        topAppBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         Intent intent = getIntent();
         imageIdx = intent.getIntExtra("idx", 0);
         Transition transition = MainActivity.slideshow.slides.get(imageIdx).transition;
 
-        Spinner transitionSpinner = findViewById(R.id.transition_spinner);
-        transitionSpinner.setAdapter(new ArrayAdapter<>(TransitionActivity.this,
-                R.layout.support_simple_spinner_dropdown_item, new String[]{
-                getString(R.string.trans_none),
-                getString(R.string.trans_fade),
-                getString(R.string.trans_push),
-                getString(R.string.trans_wipe),
-                getString(R.string.trans_uncover),
-                getString(R.string.trans_cover)
+        selectedTransitionCategory = TransitionCategory.fromValue(transition.getType().getValue() / 10);
+        if (selectedTransitionCategory != TransitionCategory.NONE) {
+            @Nullable Integer id = transitionMap.inverse().get(selectedTransitionCategory);
+            if (id != null) ((MaterialButton) findViewById(id)).setChecked(true);
         }
-        ));
-        transitionSpinner.setSelection(transition.getCategory().getValue(), true);
-        transitionSpinner.setOnItemSelectedListener(transitionSpinnerListener);
-
         loadEffectOptions(transition.getType());
 
-        ((TextView) findViewById(R.id.duration_txt)).setText(String.valueOf(MainActivity.slideshow.slides.get(imageIdx).getTiming()));
-        ((TextView) findViewById(R.id.transition_duration_txt)).setText(String.valueOf(transition.getDuration()));
-    }
+        setEditFieldNumber(R.id.duration_txt, MainActivity.slideshow.slides.get(imageIdx).getTiming());
+        setEditFieldNumber(R.id.transition_duration_txt, transition.getDuration());
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_editor_drawer, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+        ScrollView scroller = findViewById(R.id.scroller);
+        ExtendedFloatingActionButton fab = findViewById(R.id.fab_done);
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.toolbar), (v, insets) -> {
+            Insets in = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            v.setPadding(in.left, 0, in.right, 0);
+            return insets;
+        });
 
-    @SuppressLint("MissingSuperCall")
-    @Override
-    public void onBackPressed() {
-        Funcs.showDialog(TransitionActivity.this, R.string.editor_apply_changes, R.string.closing_transition_editor, (d, b) -> {
-            switch (b) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    applyChanges();
-                    finish();
-                    break;
+        Insets[] systemInsets = {null};
+        Runnable updateScrollerPadding = () -> {
+            if (systemInsets[0] != null && fab.getHeight() > 0) {
+                Insets in = systemInsets[0];
+                int bottomPadding = in.bottom + fab.getHeight() + Funcs.toDp(16);
+                scroller.setPadding(in.left, 0, in.right, bottomPadding);
+            }
+        };
 
-                case DialogInterface.BUTTON_NEGATIVE:
-                    finish();
-                    break;
+        ViewCompat.setOnApplyWindowInsetsListener(scroller, (v, insets) -> {
+            systemInsets[0] = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.ime());
+            updateScrollerPadding.run();
+            return insets;
+        });
+
+        fab.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                fab.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                updateScrollerPadding.run();
+            }
+        });
+
+        ViewCompat.setOnApplyWindowInsetsListener(fab, (v, insets) -> {
+            Insets in = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.ime());
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+
+            int margin = Funcs.toDp(20);
+            params.setMargins(0, 0, in.right + margin, in.bottom + margin);
+
+            v.setLayoutParams(params);
+            return insets;
+        });
+
+        // Handle back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Funcs.showDialog(TransitionActivity.this, R.string.editor_apply_changes, R.string.closing_transition_editor, (d, b) -> {
+                    switch (b) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            applyChangesAndFinish();
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            finish();
+                            break;
+                    }
+                });
             }
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.nav_apply) {
-            applyChanges();
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+    public void onFabClick(View v) {
+        applyChangesAndFinish();
     }
 
-    private void applyChanges() {
+    private void applyChangesAndFinish() {
         applyTransition(imageIdx);
 
         try {
-            MainActivity.slideshow.slides.get(imageIdx).setTiming(
-                    Funcs.convertToDouble(((EditText) findViewById(R.id.duration_txt)).getText().toString()));
+            MainActivity.slideshow.slides.get(imageIdx).setTiming(getEditFieldNumber(R.id.duration_txt));
         } catch (Exception ignored) {
         }
+        finish();
     }
 
     private void applyTransition(int idx) {
         Transition transition = MainActivity.slideshow.slides.get(idx).transition;
-        int selectedIdx = ((Spinner) findViewById(R.id.transition_spinner)).getSelectedItemPosition();
 
-        switch (TransitionCategory.fromValue(selectedIdx)) {
-            case FADE:
-            case PUSH:
-            case WIPE:
-            case UNCOVER:
-            case COVER:
-                transition.setType((selectedIdx * 10) + ((Spinner) findViewById(R.id.effect_spinner)).getSelectedItemPosition());
-                break;
-            case NONE:
-            default:
-                transition.setType(TransitionType.NONE);
-                break;
+        if (selectedTransitionCategory == TransitionCategory.NONE) {
+            transition.setType(TransitionType.NONE);
+        } else if (selectedTransitionCategory == TransitionCategory.FADE) {
+            RadioGroup fadeOptions = findViewById(R.id.fade_options);
+            if (fadeOptions.getCheckedRadioButtonId() == R.id.through_black)
+                transition.setType(TransitionType.FADE_THROUGH_BLACK);
+            else
+                transition.setType(TransitionType.FADE);
+        } else {
+            RadioGroup movementOptions = findViewById(R.id.movement_options);
+            int selectedDirection = movementOptions.getCheckedRadioButtonId();
+            if (selectedDirection == -1) selectedDirection = R.id.from_left;
+
+            transition.setType(TransitionType.fromValue(selectedTransitionCategory.getValue() * 10 +
+                    Objects.requireNonNull(directionMap.get(selectedDirection)).getValue()));
         }
 
         try {
-            transition.setDuration(
-                    Funcs.convertToDouble(((EditText) findViewById(R.id.transition_duration_txt)).getText().toString()));
+            transition.setDuration(getEditFieldNumber(R.id.transition_duration_txt));
         } catch (Exception ignored) {
         }
     }
@@ -149,12 +181,39 @@ public class TransitionActivity extends AppCompatActivity {
             applyTransition(i);
 
             try {
-                MainActivity.slideshow.slides.get(i).setTiming(
-                        Funcs.convertToDouble(((EditText) findViewById(R.id.duration_txt)).getText().toString()));
+                MainActivity.slideshow.slides.get(i).setTiming(getEditFieldNumber(R.id.duration_txt));
             } catch (Exception ignored) {
             }
         }
         finish();
+    }
+
+    private void resetTransitionButtons(@IdRes int... except) {
+        for (int buttonId : transitionMap.keySet()) {
+            if (except.length == 0 || buttonId != except[0]) {
+                MaterialButton button = findViewById(buttonId);
+                button.setChecked(false);
+            }
+        }
+    }
+
+    private void updateChosenTransition(TransitionCategory transition, @IdRes int id) {
+        resetTransitionButtons(id);
+
+        if (selectedTransitionCategory == transition) {
+            selectedTransitionCategory = TransitionCategory.NONE;
+        } else {
+            selectedTransitionCategory = transition;
+        }
+        loadEffectOptions(selectedTransitionCategory);
+    }
+
+    public void onTransitionButtonClick(View v) {
+        int id = v.getId();
+        TransitionCategory transition = transitionMap.get(id);
+        if (transition != null) {
+            updateChosenTransition(transition, id);
+        }
     }
 
     private void loadEffectOptions(TransitionCategory category) {
@@ -162,36 +221,39 @@ public class TransitionActivity extends AppCompatActivity {
     }
 
     private void loadEffectOptions(TransitionType type) {
-        String[] options;
+        RadioGroup fadeOptions = findViewById(R.id.fade_options);
+        RadioGroup movementOptions = findViewById(R.id.movement_options);
+
         if (type == TransitionType.NONE) {
             findViewById(R.id.effect_spinner_lbl).setVisibility(View.GONE);
-            findViewById(R.id.effect_spinner).setVisibility(View.GONE);
-            findViewById(R.id.duration_panel).setVisibility(View.GONE);
-            return;
+            fadeOptions.setVisibility(View.GONE);
+            movementOptions.setVisibility(View.GONE);
+            findViewById(R.id.transition_duration_txt).setVisibility(View.GONE);
 
         } else {
             findViewById(R.id.effect_spinner_lbl).setVisibility(View.VISIBLE);
-            findViewById(R.id.effect_spinner).setVisibility(View.VISIBLE);
-            findViewById(R.id.duration_panel).setVisibility(View.VISIBLE);
+            findViewById(R.id.transition_duration_txt).setVisibility(View.VISIBLE);
 
             if (type == TransitionType.FADE || type == TransitionType.FADE_THROUGH_BLACK) {
-                options = new String[]{
-                        getString(R.string.trans_smoothly),
-                        getString(R.string.trans_through_black)
-                };
+                movementOptions.setVisibility(View.GONE);
+                fadeOptions.setVisibility(View.VISIBLE);
+                fadeOptions.check(type == TransitionType.FADE_THROUGH_BLACK ? R.id.through_black : R.id.fade_smoothly);
             } else {
-                options = new String[]{
-                        getString(R.string.trans_from_left),
-                        getString(R.string.trans_from_right),
-                        getString(R.string.trans_from_top),
-                        getString(R.string.trans_from_bottom)
-                };
+                Integer selectedDirection = directionMap.inverse().get(type.getDirection());
+                fadeOptions.setVisibility(View.GONE);
+                movementOptions.setVisibility(View.VISIBLE);
+                movementOptions.check(selectedDirection == null ? R.id.from_left : selectedDirection);
             }
         }
+    }
 
-        Spinner effectSpinner = findViewById(R.id.effect_spinner);
-        effectSpinner.setAdapter(new ArrayAdapter<>(TransitionActivity.this,
-                R.layout.support_simple_spinner_dropdown_item, options));
-        effectSpinner.setSelection(type.getDirection().getValue(), true);
+    private double getEditFieldNumber(@IdRes int id) {
+        TextInputLayout layout = findViewById(id);
+        return Funcs.convertToDouble(Objects.requireNonNull(layout.getEditText()).getText().toString());
+    }
+
+    private void setEditFieldNumber(@IdRes int id, double value) {
+        TextInputLayout layout = findViewById(id);
+        Objects.requireNonNull(layout.getEditText()).setText(String.valueOf(value));
     }
 }
